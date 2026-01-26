@@ -1,8 +1,8 @@
 ---
 title: "U.S. Egg Production Analysis Using Linear Mixed Models"
 subtitle: "An Exploration Across States and Months"
-author: "Students names (Advisor: Dr. Cohen)"
-date: '`r Sys.Date()`'
+author: "Rose Dalton (Advisor: Dr. Cohen)"
+date: '2026'
 format:
   revealjs
 course: Capstone Projects in Data Science
