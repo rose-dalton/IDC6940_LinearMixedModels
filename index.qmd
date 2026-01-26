@@ -1,6 +1,6 @@
 ---
-title: "Linear Mixed Models - Spring 2026"
-subtitle: ""
+title: "U.S. Egg Production Analysis Using Linear Mixed Models"
+subtitle: "An Exploration Across States and Months"
 author: "Rose Dalton (Advisor: Dr. Cohen)"
 date: '`r Sys.Date()`'
 format:
