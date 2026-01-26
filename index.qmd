@@ -7,8 +7,7 @@ format:
   html:
     code-fold: true
 course: Capstone Projects in Data Science
-bibliography: references.bib # file contains bibtex for references
-#always_allow_html: true # this allows to get PDF with HTML features
+bibliography: references.bib 
 self-contained: true
 execute: 
   warning: false
@@ -161,3 +160,4 @@ ggplot1 = murders %>% ggplot(mapping = aes(x=population/10^6, y=total))
 -   Discuss the implications of your results.
 
 ## References
+Best practice guidance for linear mixed-effects models in psychological science [@meteyard2020best].  
