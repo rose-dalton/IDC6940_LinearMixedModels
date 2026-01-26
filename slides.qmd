@@ -1,6 +1,6 @@
 ---
-title: "Present a great story for data science projects"
-subtitle: "This is a Slide Template"
+title: "U.S. Egg Production Analysis Using Linear Mixed Models"
+subtitle: "An Exploration Across States and Months"
 author: "Students names (Advisor: Dr. Cohen)"
 date: '`r Sys.Date()`'
 format:
