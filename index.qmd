@@ -1,5 +1,5 @@
 ---
-title: "Linear Mixed Models - Spring 2026 "
+title: "Linear Mixed Models - Spring 2026"
 subtitle: ""
 author: "Rose Dalton (Advisor: Dr. Cohen)"
 date: '`r Sys.Date()`'
