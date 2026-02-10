@@ -160,10 +160,12 @@ ggplot1 = murders %>% ggplot(mapping = aes(x=population/10^6, y=total))
 -   Discuss the implications of your results.
 
 ## References
-Best practice guidance for linear mixed-effects models in psychological science [@meteyard2020best].  
+@meteyard2020best 
+@brown2021introduction
+@zhou2022using
+@adhikari2016comparing
+@ryoo2011model
+@schielzeth2020robustness
+@huitema2025fisher
+@henderson1953variance
 
-An Introduction to Linear Mixed-Effects Modeling in R [@brown2021introduction].
-
-Using linear mixed-effects modeling to evaluate the impact of edaphic factors on spatial variation in winter wheat grain yield [@zhou2022using].
-
-Comparing Linear Mixed Models for Preliminary Yield Trials That Follow Augmented Experimental Designs [@adhikari2016comparing].
