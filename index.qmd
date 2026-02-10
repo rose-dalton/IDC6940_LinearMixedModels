@@ -31,41 +31,22 @@ writing!
 Nice report!
 :::
 
-## Introduction
+## Literature Review
 
-The introduction should:
+Statistical methods for comparing differences between groups have long served as a cornerstone of empirical research across the natural and social sciences. A perennial pursuit for tools capable of detecting inter-group variation while accounting for uncertainty and sampling error has persisted across the ages. Early methods, including t-tests, analysis of variance (ANOVA), and linear regression, provided foundational mechanisms for evaluating mean differences and variance relationships under specific conditions. Increasingly complex data structures caused widespread demand for more robust models and so methodological advances gave rise to linear mixed-effects models (LMMs). These models bridged the gaps in conventional techniques by incorporating both fixed and random sources of variation within hierarchical datasets. The purpose of this review is to examine how LMMs came to prominent usage, the associated benefits and limitations, and how this method may be applied to this capstone project.
 
--   Develop a storyline that captures attention and maintains interest.
+Formal tests for group comparisons began appearing in the early 20th century. Sir Ronald Fisher proved himself a major pioneer of the subject with his work, Statistical Methods for Research Workers, released in 1925. This was one of the earliest books on record to acknowledge comparison analyses such as t-tests, the analysis of variance (ANOVA), the maximum likelihood estimation, and experimental design for correlation studies (@huitema2025fisher). Another figurehead of 20th century variance analysis was C.R. Henderson, whose landmark 1953 paper, “Estimation of Variance and Covariance Components”, helped spearhead the development of mixed models. Henderson’s work built upon Fisher's, but emphasized the need to employ new tactics in order to capture variance measures between uneven groupings. The article demonstrated how a linear model derived from agricultural data could be appraised with a conventional least squares analysis. The resulting mean squares and their theoretical expectations can be used to calculate the variance associated with the model's fixed and random effects. While these calculations are complex and time-consuming, particularly for that era, they yielded unbiased results compared to the prevailing methods of the time (@henderson1953variance).
 
--   Your audience is your peers
+The pursuit to find unbiased variance measures led Henderson and others to extrapolate on models that incorporate mixed effects. Traditional methods, like ANOVA and simple regression, were known to produce reliable results when the data met ideal, if constrained, requirements. This generally meant that the data was expected to come from a normal distribution, and be organized into balanced, orthogonal groupings (@henderson1953variance). Brown postulated that the traditional methods also perform poorly with dependent data from repeat measures, including nested groups. Linear mixed-effects models closed the gap by incorporating both fixed and random effects within a single analytical structure. Fixed effects are those which occur at the population-wide level and will be present across all experiments; these include condition effects and intervariable interactions. Random effects are included to account for the extent to which fixed effects fluctuate across tiers of the same grouping (@brown2021introduction). By explicitly modeling these sources of variation, LMMs accommodate data in which observations are not independent but instead clustered within higher-level units. Another strength of LMMs is their use of pooling as a way to handle comparisons between unequal datasets, a boon when faced with missing data points. Pooling involves the shrinkage of group-level estimates toward the general population mean when there are fewer data points in that group; this allows mixed models to balance intragroup behavior with broader population trends(@meteyard2020best). 
 
--   Clearly state the problem or question you're addressing.
+Given the aforementioned mechanisms incorporated into linear mixed-effect models, these models are inherently endowed with a unique statistical flexibility. A study by Schielzeth and others revealed that fixed-effect variance estimates obtained through LMMs were generally unbiased even under substantial data assumption violations, including skew, bimodality, heteroskedasticity. It is worth noting, however, that precision was observed to decrease and uncertainty increased (@schielzeth2020robustness). 
 
-<!-- -->
+While linear mixed models possess a multitude of benefits, they also bear intrinsic challenges. Model specification can be complex, particularly when determining the appropriate mixed-effects structure. LMMs require the analyst to specify the representative terms for both types of effects as well as random error. When building a LMM around longitudinal data, incorporating a balanced degree of effects into the model is key to enhancing the model’s stability and reproducibility. Insufficient attribution to effects may yield overly diffuse predictions, while oversaturated models may be difficult to reconstruct and possibly even ineffective at their task (@ryoo2011model). As observed in Henderson’s work, the arithmetic involved in deriving the appropriate model can be tedious and cumbersome, even with the benefit of modern statistical software. Another consideration centers on the data of interest. While linear mixed models may process unbalanced data, the fact that compromised distributions yield results of lower precision and higher uncertainty cannot be ignored (@schielzeth2020robustness). 
 
--   Introduce why it is relevant needs.
+Because of their robust performance in the face of imperfect data, LMMs are commonly utilized in practical research fields such as agriculture, psychology, ecology, and clinical research. This is evidenced in the 2020 work of Meteyard and Davies which reviewed 400 psychological research papers that utilized linear mixed models. A 2016 plant genetics research paper assessed spatial effects within the context of crop yield data analysis. LMMs proved useful for this purpose since the field of plant breeding is chiefly interested in crop performance, yet sample sizes are often small and experiments non-reproducible (@adhikari2016comparing). Another agricultural study in 2021 was conducted to analyze and quantify the impact of various factors, including soil nutrient content, meteorological measures, and historical land topography, on winter wheat crop performance(@zhou2022using). 
 
--   Provide an overview of your approach.
+For my capstone project, I am interested in modeling U.S. chicken egg production across multiple states and years while also investigating the effects of average feed price and temperature. Given the repeated measurements and nested quality of the data, linear mixed-effects modeling seems like an appropriate tool to accomplish this. This method is capable of capturing variance measures from the fixed effects associated with interactions between variables and from the random effects that trickle down from the hierarchical structure of the groupings. In doing so, I hope to obtain greater insights than simple regression alone might provide.
 
-Example of writing including citing references:
-
-*This is an introduction to ..... regression, which is a non-parametric
-estimator that estimates the conditional expectation of two variables
-which is random. The goal of a kernel regression is to discover the
-non-linear relationship between two random variables. To discover the
-non-linear relationship, kernel estimator or kernel smoothing is the
-main method to estimate the curve for non-parametric statistics. In
-kernel estimator, weight function is known as kernel function
-[@efr2008]. Cite this paper [@bro2014principal]. The GEE [@wang2014].
-The PCA [@daffertshofer2004pca]*. Topology can be used in machine
-learning [@adams2021topology]
-
-For Symbolic Regression [@wang2019symbolic] *This is my work and I want
-to add more work...*
-
-Cite new paper [@su2012linear]
-
-Classification of Knee OA was studied here [@guida2021knee]
 
 ## Methods
 
