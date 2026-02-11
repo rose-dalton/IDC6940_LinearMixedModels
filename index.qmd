@@ -31,7 +31,7 @@ writing!
 Nice report!
 :::
 
-## Literature Review
+## Introduction
 
 Statistical methods for comparing differences between groups have long served as a cornerstone of empirical research across the natural and social sciences. A perennial pursuit for tools capable of detecting inter-group variation while accounting for uncertainty and sampling error has persisted across the ages. Early methods, including t-tests, analysis of variance (ANOVA), and linear regression, provided foundational mechanisms for evaluating mean differences and variance relationships under specific conditions. Increasingly complex data structures caused widespread demand for more robust models and so methodological advances gave rise to linear mixed-effects models (LMMs). These models bridged the gaps in conventional techniques by incorporating both fixed and random sources of variation within hierarchical datasets. The purpose of this review is to examine how LMMs came to prominent usage, the associated benefits and limitations, and how this method may be applied to this capstone project.
 
@@ -43,7 +43,7 @@ Given the aforementioned mechanisms incorporated into linear mixed-effect models
 
 While linear mixed models possess a multitude of benefits, they also bear intrinsic challenges. Model specification can be complex, particularly when determining the appropriate mixed-effects structure. LMMs require the analyst to specify the representative terms for both types of effects as well as random error. When building a LMM around longitudinal data, incorporating a balanced degree of effects into the model is key to enhancing the model’s stability and reproducibility. Insufficient attribution to effects may yield overly diffuse predictions, while oversaturated models may be difficult to reconstruct and possibly even ineffective at their task (@ryoo2011model). As observed in Henderson’s work, the arithmetic involved in deriving the appropriate model can be tedious and cumbersome, even with the benefit of modern statistical software. Another consideration centers on the data of interest. While linear mixed models may process unbalanced data, the fact that compromised distributions yield results of lower precision and higher uncertainty cannot be ignored (@schielzeth2020robustness). 
 
-Because of their robust performance in the face of imperfect data, LMMs are commonly utilized in practical research fields such as agriculture, psychology, ecology, and clinical research. This is evidenced in the 2020 work of Meteyard and Davies which reviewed 400 psychological research papers that utilized linear mixed models. A 2016 plant genetics research paper assessed spatial effects within the context of crop yield data analysis. LMMs proved useful for this purpose since the field of plant breeding is chiefly interested in crop performance, yet sample sizes are often small and experiments non-reproducible (@adhikari2016comparing). Another agricultural study in 2021 was conducted to analyze and quantify the impact of various factors, including soil nutrient content, meteorological measures, and historical land topography, on winter wheat crop performance (@zhou2022using). 
+Because of their robust performance in the face of imperfect data, LMMs are commonly utilized in practical research fields such as agriculture, psychology, ecology, and clinical research. This is evidenced in the 2020 work of Meteyard and Davies which reviewed 400 psychological research papers that utilized linear mixed models. A 2016 plant genetics research paper assessed spatial effects within the context of crop yield data analysis. LMMs proved useful for this purpose since the field of plant breeding is chiefly interested in crop performance, yet sample sizes are often small and experiments non-reproducible (@adhikari2016comparing). Another agricultural study in 2021 was conducted to analyze and quantify the impact of various factors, including soil nutrient content, meteorological measures, and historical land topography, on winter wheat crop performance (@zhou2022using).  
 
 For my capstone project, I am interested in modeling U.S. chicken egg production across multiple states and years while also investigating the effects of average feed price and temperature. Given the repeated measurements and nested quality of the data, linear mixed-effects modeling seems like an appropriate tool to accomplish this. This method is capable of capturing variance measures from the fixed effects associated with interactions between variables and from the random effects that trickle down from the hierarchical structure of the groupings. In doing so, I hope to obtain greater insights than simple regression alone might provide.
 
@@ -141,6 +141,8 @@ ggplot1 = murders %>% ggplot(mapping = aes(x=population/10^6, y=total))
 -   Discuss the implications of your results.
 
 ## References
+ChatGPT-5.2 used to fine tune writing to improve grammar, sentence structure, and flow.
+
 @meteyard2020best 
 @brown2021introduction
 @zhou2022using
