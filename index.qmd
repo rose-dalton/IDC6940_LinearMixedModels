@@ -43,7 +43,7 @@ This structure endows LMMs with considerable flexibility. @schielzeth2020robustn
 
 Owing to their robust performance in the face of imperfect data, LMMs are commonly utilized in practical fields such as agriculture, psychology, ecology, and clinical research. @meteyard2020best documented their extensive adoption in psychological research, while agricultural applications include modeling spatial yield variation in plant breeding trials (@adhikari2016comparing) and assessing environmental drivers of winter wheat performance (@zhou2022using).
 
-Within the present capstone project, LMMs provide an appropriate framework for modeling U.S. egg production across states and years while investigating the effects of average feed price and temperature. The repeated-measures and nested structure of the dataset necessitate an approach capable of partitioning population-level effects from state-level variability. By capturing both fixed interactions and hierarchical random variation, LMMs offer more comprehensive insights into production dynamics than traditional regression alone.
+Within the present capstone project, LMMs provide an appropriate framework for modeling U.S. egg production across states and years while investigating the effects of average feed price and temperature. The repeated-measures and nested structure of the dataset necessitate an approach capable of partitioning population-level effects from state-level variability. By capturing both fixed interactions and hierarchical random variation, LMMs offer more comprehensive insights into production dynamics than traditional regression alone. 
 
 
 
