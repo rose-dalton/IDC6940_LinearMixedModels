@@ -140,7 +140,7 @@ ggplot1 = murders %>% ggplot(mapping = aes(x=population/10^6, y=total))
 -   Discuss the implications of your results.
 
 ## References
-ChatGPT-5.2 used to fine tune writing to improve grammar, sentence structure, and flow.
+ChatGPT-5.2 used to fine tune writing to improve grammar, sentence structure, and flow. 
 
 @meteyard2020best 
 @brown2021introduction
