@@ -150,3 +150,6 @@ ChatGPT-5.2 used to fine tune writing to improve grammar, sentence structure, an
 @schielzeth2020robustness
 @huitema2025fisher
 @henderson1953variance
+@NOAA_ClimateAtAGlance_2026
+@USDA_ChickensAndEggs_2026
+@USDA_AgriculturalPrices_2026
