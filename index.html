@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Rose Dalton (Advisor: Dr. Cohen)">
-<meta name="dcterms.date" content="2026-02-22">
+<meta name="dcterms.date" content="2026-02-23">
 
 <title>U.S. Egg Production Analysis Using Linear Mixed Models</title>
 <style>
@@ -3237,10 +3237,11 @@ window.Quarto = {
 
 </head>
 
-<body class="fullcontent">
+<body>
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="index.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
@@ -3263,7 +3264,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">February 22, 2026</p>
+      <p class="date">February 23, 2026</p>
     </div>
   </div>
   
@@ -3304,7 +3305,58 @@ y_i = \beta_0 + \beta_1 X_1 +\varepsilon_i
 <h2 class="anchored" data-anchor-id="analysis-and-results">Analysis and Results</h2>
 <section id="data-exploration-and-visualization" class="level3">
 <h3 class="anchored" data-anchor-id="data-exploration-and-visualization">Data Exploration and Visualization</h3>
-<p>The dataset was compiled from multiple government agency resources. Egg production rates and grain prices were sourced from the U.S. Department of Agriculture’s National Agricultural Statistics Service monthly report archive. Temperature data was sourced from the National Oceanic and Atmospheric Administration’s Climate at a Glance National Time Series archive.</p>
+<p>The dataset was compiled from multiple government agency resources. Egg production rates and grain prices were sourced from the U.S. Department of Agriculture’s National Agricultural Statistics Service monthly report archive (<span class="citation" data-cites="USDA_ChickensAndEggs_2026">United States Department of Agriculture, National Agricultural Statistics Service (<a href="#ref-USDA_ChickensAndEggs_2026" role="doc-biblioref">2026b</a>)</span>, <span class="citation" data-cites="USDA_AgriculturalPrices_2026">United States Department of Agriculture, National Agricultural Statistics Service (<a href="#ref-USDA_AgriculturalPrices_2026" role="doc-biblioref">2026a</a>)</span>). Temperature data was sourced from the National Oceanic and Atmospheric Administration’s Climate at a Glance National Time Series archive (<span class="citation" data-cites="NOAA_ClimateAtAGlance_2026">NOAA National Centers for Environmental Information (<a href="#ref-NOAA_ClimateAtAGlance_2026" role="doc-biblioref">2026</a>)</span>).</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>date</code></td>
+<td>Time Index</td>
+<td>Monthly observation period from January 2000 through December 2024.</td>
+</tr>
+<tr class="even">
+<td><code>state</code></td>
+<td>Categorical</td>
+<td>25 U.S. states with consistently high commercial egg production.</td>
+</tr>
+<tr class="odd">
+<td><code>eggsPer100Layers</code></td>
+<td>Continuous</td>
+<td>Monthly productivity measure defined as the number of eggs produced per 100 laying hens.</td>
+</tr>
+<tr class="even">
+<td><code>cornPrice</code></td>
+<td>Continuous</td>
+<td>Monthly average U.S. price per bushel of corn (USD).</td>
+</tr>
+<tr class="odd">
+<td><code>soybeanPrice</code></td>
+<td>Continuous</td>
+<td>Monthly average U.S. price per bushel of soybeans (USD).</td>
+</tr>
+<tr class="even">
+<td><code>feedPrice</code></td>
+<td>Continuous</td>
+<td>Weighted feed cost calculated as 2/3 × <code>cornPrice</code> + 1/3 × <code>soybeanPrice</code> (USD per bushel).</td>
+</tr>
+<tr class="odd">
+<td><code>avgTemp</code></td>
+<td>Continuous</td>
+<td>State-level monthly average temperature (°F).</td>
+</tr>
+</tbody>
+</table>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
