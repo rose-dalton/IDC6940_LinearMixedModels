@@ -78,46 +78,92 @@ $$
 
 ### Data Exploration and Visualization
 
--   Describe your data sources and collection process.
 
--   Present initial findings and insights through visualizations.
+The dataset was compiled from multiple government agency resources. Egg production rates and grain prices were sourced from the U.S. Department of Agriculture’s National Agricultural Statistics Service monthly report archive. Temperature data was sourced from the National Oceanic and Atmospheric Administration’s Climate at a Glance National Time Series archive.
 
--   Highlight unexpected patterns or anomalies.
 
-A study was conducted to determine how...
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
 # loading packages 
 library(tidyverse)
-library(knitr)
 library(ggthemes)
-library(ggrepel)
-library(dslabs)
+
 ```
 
-```{python}
-import pandas as pd
-```
 
 ```{r, warning=FALSE, echo=TRUE}
-# Load Data
-kable(head(murders))
+# load data
+eggData <- read.csv("USDA_Egg_Data.csv")
 
-ggplot1 = murders %>% ggplot(mapping = aes(x=population/10^6, y=total)) 
+# clean data for visuals
+eggData_clean <- eggData %>%
+  select(date, state, eggsPer100Layers, avgTemp, feedPrice) %>%
+  mutate(
+    state = str_trim(state),                         # removes extra spaces
+    eggsPer100Layers = as.numeric(eggsPer100Layers), # converts value to numeric type
+    avgTemp = as.numeric(avgTemp),
+    Date = as.Date(paste0(date, "-01")),             # converts YYYY-MM to Date format
+    Year = year(Date),                              
+    Month = month(Date)
+  ) 
 
-  ggplot1 + geom_point(aes(col=region), size = 4) +
-  geom_text_repel(aes(label=abb)) +
-  scale_x_log10() +
-  scale_y_log10() +
-  geom_smooth(formula = "y~x", method=lm,se = F)+
-  xlab("Populations in millions (log10 scale)") + 
-  ylab("Total number of murders (log10 scale)") +
-  ggtitle("US Gun Murders in 2010") +
-  scale_color_discrete(name = "Region")+
-      theme_bw()
-  
+#time series plot
+timeSeries = eggData_clean %>% ggplot(mapping = aes(x=Date, y=eggsPer100Layers)) 
 
+timeSeries + geom_line(alpha = 0.6) +
+  geom_smooth(method = "loess", se = FALSE, span = 0.25) +
+  facet_wrap(~ state, ncol = 5, scales = "free_y") +
+  labs(title = "Eggs per 100 Layers Over Time (2000–2024)",
+    x = "Date",
+    y = "Eggs per 100 Layers") +
+  theme_bw()
 ```
+Seasonality appears present for every state. This is evidenced by the regularly repeating peaks and troughs. We can presume that laying productivity follows an annual pattern. While nearly all states examined exhibit some degree of increase in egg productivity, Alabama yielded a unique graph. This trend line is generally consistent over the 25 years with minor variability present.
+---
+
+```{r, warning=FALSE, echo=TRUE}
+
+# month box plot
+boxPlot = eggData_clean %>% ggplot(mapping = aes(x=factor(Month), y=eggsPer100Layers))
+
+boxPlot + geom_boxplot(outlier.alpha = 0.3) +
+  labs(title = "Seasonality: Eggs per 100 Layers by Month",
+    x = "Month",
+    y = "Eggs per 100 Layers") +
+  theme_bw()
+```
+This plot indicates that there are disparities in egg production across months. Productivity appears to be higher in January, March, May, July, August, October, and December. The least productive month is clearly February. 
+---
+
+```{r, warning=FALSE, echo=TRUE}
+
+# temperature scatterplot
+scatter = eggData_clean %>% ggplot(mapping = aes(x=avgTemp, y=eggsPer100Layers))
+
+scatter + geom_point(alpha = 0.25) +
+  geom_smooth(method = "loess", se = TRUE, span = 0.75) +
+  labs(title = "Eggs per 100 Layers vs Average Temperature",
+    x = "Average Temperature (°F)",
+    y = "Eggs per 100 Layers") +
+  theme_bw()
+```
+A notable feature of this scatterplot is how the productivity trend declines sharply as temperature exceeds 75 degrees F. @Kim2024_HeatStress_LayingHens reaffirm that laying hens are susceptible to heat stress. A temperature–humidity index of 76-81 degrees is considered dangerous and over 81 is categorized as emergency.
+---
+
+```{r, warning=FALSE, echo=TRUE}
+
+# feed scatterplot
+scatter2 = eggData_clean %>% ggplot(mapping = aes(x=feedPrice, y=eggsPer100Layers))
+
+scatter2 + geom_point(alpha = 0.25) +
+  geom_smooth(method = "loess", se = TRUE, span = 0.75) +
+  labs(title = "Eggs per 100 Layers vs Average Temperature",
+       x = "Feed Price (USD/bushel)",
+       y = "Eggs per 100 Layers") +
+  theme_bw()
+```
+This scatterplot seems to indicate that a slightly positive relationship exists between feed price and eggs/100 layers. This is counterintuitive to preconceived notions. 
+---
 
 ### Modeling and Results
 
@@ -153,3 +199,4 @@ ChatGPT-5.2 used to fine tune writing to improve grammar, sentence structure, an
 @NOAA_ClimateAtAGlance_2026
 @USDA_ChickensAndEggs_2026
 @USDA_AgriculturalPrices_2026
+@Kim2024_HeatStress_LayingHens
