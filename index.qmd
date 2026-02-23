@@ -99,10 +99,10 @@ eggData <- read.csv("USDA_Egg_Data.csv")
 eggData_clean <- eggData %>%
   select(date, state, eggsPer100Layers, avgTemp, feedPrice) %>%
   mutate(
-    state = str_trim(state),                         # removes extra spaces
-    eggsPer100Layers = as.numeric(eggsPer100Layers), # converts value to numeric type
+    state = str_trim(state),                         
+    eggsPer100Layers = as.numeric(eggsPer100Layers), 
     avgTemp = as.numeric(avgTemp),
-    Date = as.Date(paste0(date, "-01")),             # converts YYYY-MM to Date format
+    Date = as.Date(paste0(date, "-01")),             
     Year = year(Date),                              
     Month = month(Date)
   ) 
@@ -162,7 +162,7 @@ scatter2 + geom_point(alpha = 0.25) +
        y = "Eggs per 100 Layers") +
   theme_bw()
 ```
-This scatterplot seems to indicate that a slightly positive relationship exists between feed price and eggs/100 layers. This is counterintuitive to preconceived notions. 
+This scatterplot seems to indicate that a slightly positive relationship exists between feed price and eggs/100 layers. This is counterintuitive to preconceived notions.
 ---
 
 ### Modeling and Results
