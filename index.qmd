@@ -75,8 +75,10 @@ $$
 ### Data Exploration and Visualization
 
 
+
 The dataset was compiled from multiple government agency resources. Egg production rates and grain prices were sourced from the U.S. Department of Agriculture’s National Agricultural Statistics Service monthly report archive (@USDA_ChickensAndEggs_2026,
 @USDA_AgriculturalPrices_2026). Temperature data was sourced from the National Oceanic and Atmospheric Administration’s Climate at a Glance National Time Series archive (@NOAA_ClimateAtAGlance_2026).
+
 
 
 | Variable | Type | Description |
@@ -91,7 +93,7 @@ The dataset was compiled from multiple government agency resources. Egg producti
 
 
 ```{r, warning=FALSE, echo=T, message=FALSE}
-# loading packages 
+# loading packages
 library(tidyverse)
 library(ggthemes)
 
