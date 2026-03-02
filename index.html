@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Rose Dalton (Advisor: Dr. Cohen)">
-<meta name="dcterms.date" content="2026-02-23">
+<meta name="dcterms.date" content="2026-03-02">
 
 <title>U.S. Egg Production Analysis Using Linear Mixed Models</title>
 <style>
@@ -3264,7 +3264,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">February 23, 2026</p>
+      <p class="date">March 2, 2026</p>
     </div>
   </div>
   
@@ -3288,18 +3288,43 @@ window.Quarto = {
 </section>
 <section id="methods" class="level2">
 <h2 class="anchored" data-anchor-id="methods">Methods</h2>
-<ul>
-<li><p>Detail the models or algorithms used.</p></li>
-<li><p>Justify your choices based on the problem and data.</p></li>
-</ul>
-<p><em>The common non-parametric regression model is</em> <span class="math inline">\(Y_i = m(X_i) + \varepsilon_i\)</span><em>, where</em> <span class="math inline">\(Y_i\)</span> <em>can be defined as the sum of the regression function value</em> <span class="math inline">\(m(x)\)</span> <em>for</em> <span class="math inline">\(X_i\)</span><em>. Here</em> <span class="math inline">\(m(x)\)</span> <em>is unknown and</em> <span class="math inline">\(\varepsilon_i\)</span> <em>some errors. With the help of this definition, we can create the estimation for local averaging i.e.</em> <span class="math inline">\(m(x)\)</span> <em>can be estimated with the product of</em> <span class="math inline">\(Y_i\)</span> <em>average and</em> <span class="math inline">\(X_i\)</span> <em>is near to</em> <span class="math inline">\(x\)</span><em>. In other words, this means that we are discovering the line through the data points with the help of surrounding data points. The estimation formula is printed below <span class="citation" data-cites="R-base">(<a href="#ref-R-base" role="doc-biblioref"><strong>R-base?</strong></a>)</span>:</em></p>
+<p>In general, a linear mixed model (LMM) is defined by:</p>
 <p><span class="math display">\[
-M_n(x) = \sum_{i=1}^{n} W_n (X_i) Y_i  \tag{1}
-\]</span><span class="math inline">\(W_n(x)\)</span> <em>is the sum of weights that belongs to all real numbers. Weights are positive numbers and small if</em> <span class="math inline">\(X_i\)</span> <em>is far from</em> <span class="math inline">\(x\)</span><em>.</em></p>
-<p><em>Another equation:</em></p>
-<p><span class="math display">\[
-y_i = \beta_0 + \beta_1 X_1 +\varepsilon_i
+\mathbf{y} = X\boldsymbol{\beta} + Z\boldsymbol{\gamma} + \mathbf{e}
 \]</span></p>
+<ul>
+<li><p><span class="math inline">\(\mathbf{y}\)</span>: outcome vector</p></li>
+<li><p><span class="math inline">\(X\)</span>: fixed-effects matrix</p></li>
+<li><p><span class="math inline">\(\boldsymbol{\beta}\)</span>: fixed-effects coefficient vector</p></li>
+<li><p><span class="math inline">\(Z\)</span>: random-effects matrix</p></li>
+<li><p><span class="math inline">\(\boldsymbol{\gamma}\)</span>: random-effects vector</p></li>
+<li><p><span class="math inline">\(\mathbf{e}\)</span>: residual error vector</p></li>
+</ul>
+<hr>
+<p>The residual error term satisfies:</p>
+<p><span class="math display">\[
+\mathbf{e} \sim \mathcal{N}(\mathbf{0}, R)
+\]</span></p>
+<ul>
+<li><p><span class="math inline">\(\boldsymbol{0}\)</span>: mean</p></li>
+<li><p><span class="math inline">\({R}\)</span>: variance</p></li>
+</ul>
+<hr>
+<p>The random effects vector satisfies:</p>
+<p><span class="math display">\[
+\boldsymbol{\gamma} \sim \mathcal{N}(\mathbf{0}, G)
+\]</span></p>
+<ul>
+<li><p><span class="math inline">\(\boldsymbol{0}\)</span>: mean</p></li>
+<li><p><span class="math inline">\({G}\)</span>: variance-covariance matrix</p></li>
+</ul>
+<hr>
+<p>Additionally, the residual errors and random effects are assumed uncorrelated(<span class="citation" data-cites="Ao2007_MixedModels_HBS">Ao (<a href="#ref-Ao2007_MixedModels_HBS" role="doc-biblioref">2007</a>)</span>):</p>
+<p><span class="math display">\[
+\mathrm{Cov}(\mathbf{e}, \boldsymbol{\gamma}) = 0
+\]</span></p>
+<hr>
+<p>This model may easily be applied to the egg production data. Egg count per 100 laying hens is the outcome under analysis, thus, serves as the outcome vector (<span class="math inline">\(\boldsymbol{y}\)</span>). Feed price and average monthly temperature per state are represented in the fixed effects portion of the model (<span class="math inline">\(\boldsymbol{Xꞵ}\)</span>). Fixed effects are used to gauge the extent of the variables’ contribution to the egg productivity rate. Random effects, on the other hand, capture behavioral differences between records within the same testing block. In this analysis, inter-state variation will be measured by the random effects portion (<span class="math inline">\(\boldsymbol{Z𝛾}\)</span>). Residual error (<span class="math inline">\(\boldsymbol{e}\)</span>) encompasses fluctuations not captured by the fixed or random effects.</p>
 </section>
 <section id="analysis-and-results" class="level2">
 <h2 class="anchored" data-anchor-id="analysis-and-results">Analysis and Results</h2>
@@ -3493,13 +3518,16 @@ y_i = \beta_0 + \beta_1 X_1 +\varepsilon_i
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
 <p>ChatGPT-5.2 used to fine tune writing to improve grammar, sentence structure, and flow.</p>
-<p><span class="citation" data-cites="meteyard2020best">Meteyard and Davies (<a href="#ref-meteyard2020best" role="doc-biblioref">2020</a>)</span> <span class="citation" data-cites="brown2021introduction">Brown (<a href="#ref-brown2021introduction" role="doc-biblioref">2021</a>)</span> <span class="citation" data-cites="zhou2022using">Zhou et al. (<a href="#ref-zhou2022using" role="doc-biblioref">2022</a>)</span> <span class="citation" data-cites="adhikari2016comparing">Adhikari, Wu, and Caffe-Treml (<a href="#ref-adhikari2016comparing" role="doc-biblioref">2016</a>)</span> <span class="citation" data-cites="ryoo2011model">Ryoo (<a href="#ref-ryoo2011model" role="doc-biblioref">2011</a>)</span> <span class="citation" data-cites="schielzeth2020robustness">Schielzeth et al. (<a href="#ref-schielzeth2020robustness" role="doc-biblioref">2020</a>)</span> <span class="citation" data-cites="huitema2025fisher">Huitema (<a href="#ref-huitema2025fisher" role="doc-biblioref">2025</a>)</span> <span class="citation" data-cites="henderson1953variance">Henderson (<a href="#ref-henderson1953variance" role="doc-biblioref">1953</a>)</span> <span class="citation" data-cites="NOAA_ClimateAtAGlance_2026">NOAA National Centers for Environmental Information (<a href="#ref-NOAA_ClimateAtAGlance_2026" role="doc-biblioref">2026</a>)</span> <span class="citation" data-cites="USDA_ChickensAndEggs_2026">United States Department of Agriculture, National Agricultural Statistics Service (<a href="#ref-USDA_ChickensAndEggs_2026" role="doc-biblioref">2026b</a>)</span> <span class="citation" data-cites="USDA_AgriculturalPrices_2026">United States Department of Agriculture, National Agricultural Statistics Service (<a href="#ref-USDA_AgriculturalPrices_2026" role="doc-biblioref">2026a</a>)</span> <span class="citation" data-cites="Kim2024_HeatStress_LayingHens">Kim et al. (<a href="#ref-Kim2024_HeatStress_LayingHens" role="doc-biblioref">2024</a>)</span></p>
+<p><span class="citation" data-cites="meteyard2020best">Meteyard and Davies (<a href="#ref-meteyard2020best" role="doc-biblioref">2020</a>)</span> <span class="citation" data-cites="brown2021introduction">Brown (<a href="#ref-brown2021introduction" role="doc-biblioref">2021</a>)</span> <span class="citation" data-cites="zhou2022using">Zhou et al. (<a href="#ref-zhou2022using" role="doc-biblioref">2022</a>)</span> <span class="citation" data-cites="adhikari2016comparing">Adhikari, Wu, and Caffe-Treml (<a href="#ref-adhikari2016comparing" role="doc-biblioref">2016</a>)</span> <span class="citation" data-cites="ryoo2011model">Ryoo (<a href="#ref-ryoo2011model" role="doc-biblioref">2011</a>)</span> <span class="citation" data-cites="schielzeth2020robustness">Schielzeth et al. (<a href="#ref-schielzeth2020robustness" role="doc-biblioref">2020</a>)</span> <span class="citation" data-cites="huitema2025fisher">Huitema (<a href="#ref-huitema2025fisher" role="doc-biblioref">2025</a>)</span> <span class="citation" data-cites="henderson1953variance">Henderson (<a href="#ref-henderson1953variance" role="doc-biblioref">1953</a>)</span> <span class="citation" data-cites="NOAA_ClimateAtAGlance_2026">NOAA National Centers for Environmental Information (<a href="#ref-NOAA_ClimateAtAGlance_2026" role="doc-biblioref">2026</a>)</span> <span class="citation" data-cites="USDA_ChickensAndEggs_2026">United States Department of Agriculture, National Agricultural Statistics Service (<a href="#ref-USDA_ChickensAndEggs_2026" role="doc-biblioref">2026b</a>)</span> <span class="citation" data-cites="USDA_AgriculturalPrices_2026">United States Department of Agriculture, National Agricultural Statistics Service (<a href="#ref-USDA_AgriculturalPrices_2026" role="doc-biblioref">2026a</a>)</span> <span class="citation" data-cites="Kim2024_HeatStress_LayingHens">Kim et al. (<a href="#ref-Kim2024_HeatStress_LayingHens" role="doc-biblioref">2024</a>)</span> <span class="citation" data-cites="Ao2007_MixedModels_HBS">Ao (<a href="#ref-Ao2007_MixedModels_HBS" role="doc-biblioref">2007</a>)</span> <span class="citation" data-cites="Mustafa2023_FixedRandomEffects_Medium">Mustafa (<a href="#ref-Mustafa2023_FixedRandomEffects_Medium" role="doc-biblioref">2023</a>)</span></p>
 
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-adhikari2016comparing" class="csl-entry" role="listitem">
 Adhikari, Sudha Neupane, Jixiang Wu, and Melanie Caffe-Treml. 2016. <span>“Comparing Linear Mixed Models for Preliminary Yield Trials That Follow Augmented Experimental Designs.”</span> <em>Conference on Applied Statistics in Agriculture (Kansas State University, New Prairie Press)</em>. <a href="https://newprairiepress.org/agstatconference/2016/proceedings/3">https://newprairiepress.org/agstatconference/2016/proceedings/3</a>.
+</div>
+<div id="ref-Ao2007_MixedModels_HBS" class="csl-entry" role="listitem">
+Ao, Xiang. 2007. <span>“A Short Introduction to Linear Mixed Models.”</span> Harvard Business School Research Computing Services; <a href="https://www.hbs.edu/research-computing-services/Shared%20Documents/Training/mixed_models.pdf" class="uri">https://www.hbs.edu/research-computing-services/Shared%20Documents/Training/mixed_models.pdf</a>.
 </div>
 <div id="ref-brown2021introduction" class="csl-entry" role="listitem">
 Brown, Violet A. 2021. <span>“An Introduction to Linear Mixed-Effects Modeling in r.”</span> <em>Advances in Methods and Practices in Psychological Science</em> 4. <a href="https://doi.org/10.1177/2515245920960351">https://doi.org/10.1177/2515245920960351</a>.
@@ -3515,6 +3543,9 @@ Kim, Hye‐Ran, Chaehwa Ryu, Sung‐Dae Lee, Jin‐Ho Cho, and Hwanku Kang. 2024
 </div>
 <div id="ref-meteyard2020best" class="csl-entry" role="listitem">
 Meteyard, Lotte, and Robert A. I. Davies. 2020. <span>“Best Practice Guidance for Linear Mixed-Effects Models in Psychological Science.”</span> <em>Journal of Memory and Language</em> 112: 104092. <a href="https://doi.org/10.1016/j.jml.2020.104092">https://doi.org/10.1016/j.jml.2020.104092</a>.
+</div>
+<div id="ref-Mustafa2023_FixedRandomEffects_Medium" class="csl-entry" role="listitem">
+Mustafa, Akif. 2023. <span>“Understanding Random Effects and Fixed Effects in Statistical Analysis.”</span> Medium. <a href="https://medium.com/@akif.iips/understanding-random-effect-and-fixed-effect-in-statistical-analysis-db4983cdf8b1">https://medium.com/@akif.iips/understanding-random-effect-and-fixed-effect-in-statistical-analysis-db4983cdf8b1</a>.
 </div>
 <div id="ref-NOAA_ClimateAtAGlance_2026" class="csl-entry" role="listitem">
 NOAA National Centers for Environmental Information. 2026. <span>“Climate at a Glance: National Time Series.”</span> <a href="https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/national/time-series" class="uri">https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/national/time-series</a>; National Oceanic; Atmospheric Administration.
