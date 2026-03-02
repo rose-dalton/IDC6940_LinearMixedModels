@@ -45,7 +45,9 @@ Within the present capstone project, LMMs provide an appropriate framework for m
 
 ## Methods
 
-In general, a linear mixed model (LMM) is defined by:
+The general linear mixed model may easily be applied to the egg production data. Egg count per 100 laying hens is the outcome under analysis, thus, serves as the outcome vector ($\boldsymbol{y}$). Feed price and average monthly temperature per state are represented in the fixed effects portion of the model ($\boldsymbol{Xꞵ}$). Fixed effects are used to gauge the extent of the variables’ contribution to the egg productivity rate. Random effects, on the other hand, capture behavioral differences between records within the same testing block. In this analysis, inter-state variation will be measured by the random effects portion ($\boldsymbol{Z𝛾}$). Residual error ($\boldsymbol{e}$) encompasses fluctuations not captured by the fixed or random effects(@Mustafa2023_FixedRandomEffects_Medium). 
+
+The general linear mixed model (LMM) is defined below:
 
 $$
 \mathbf{y} = X\boldsymbol{\beta} + Z\boldsymbol{\gamma} + \mathbf{e}
@@ -94,9 +96,6 @@ Additionally, the residual errors and random effects are assumed uncorrelated(@A
 $$
 \mathrm{Cov}(\mathbf{e}, \boldsymbol{\gamma}) = 0
 $$
----
-
-This model may easily be applied to the egg production data. Egg count per 100 laying hens is the outcome under analysis, thus, serves as the outcome vector ($\boldsymbol{y}$). Feed price and average monthly temperature per state are represented in the fixed effects portion of the model ($\boldsymbol{Xꞵ}$). Fixed effects are used to gauge the extent of the variables’ contribution to the egg productivity rate. Random effects, on the other hand, capture behavioral differences between records within the same testing block. In this analysis, inter-state variation will be measured by the random effects portion ($\boldsymbol{Z𝛾}$). Residual error ($\boldsymbol{e}$) encompasses fluctuations not captured by the fixed or random effects. 
 
 
 ## Analysis and Results

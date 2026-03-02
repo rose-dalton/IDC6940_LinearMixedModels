@@ -3288,7 +3288,8 @@ window.Quarto = {
 </section>
 <section id="methods" class="level2">
 <h2 class="anchored" data-anchor-id="methods">Methods</h2>
-<p>In general, a linear mixed model (LMM) is defined by:</p>
+<p>The general linear mixed model may easily be applied to the egg production data. Egg count per 100 laying hens is the outcome under analysis, thus, serves as the outcome vector (<span class="math inline">\(\boldsymbol{y}\)</span>). Feed price and average monthly temperature per state are represented in the fixed effects portion of the model (<span class="math inline">\(\boldsymbol{Xꞵ}\)</span>). Fixed effects are used to gauge the extent of the variables’ contribution to the egg productivity rate. Random effects, on the other hand, capture behavioral differences between records within the same testing block. In this analysis, inter-state variation will be measured by the random effects portion (<span class="math inline">\(\boldsymbol{Z𝛾}\)</span>). Residual error (<span class="math inline">\(\boldsymbol{e}\)</span>) encompasses fluctuations not captured by the fixed or random effects(<span class="citation" data-cites="Mustafa2023_FixedRandomEffects_Medium">Mustafa (<a href="#ref-Mustafa2023_FixedRandomEffects_Medium" role="doc-biblioref">2023</a>)</span>).</p>
+<p>The general linear mixed model (LMM) is defined below:</p>
 <p><span class="math display">\[
 \mathbf{y} = X\boldsymbol{\beta} + Z\boldsymbol{\gamma} + \mathbf{e}
 \]</span></p>
@@ -3323,8 +3324,6 @@ window.Quarto = {
 <p><span class="math display">\[
 \mathrm{Cov}(\mathbf{e}, \boldsymbol{\gamma}) = 0
 \]</span></p>
-<hr>
-<p>This model may easily be applied to the egg production data. Egg count per 100 laying hens is the outcome under analysis, thus, serves as the outcome vector (<span class="math inline">\(\boldsymbol{y}\)</span>). Feed price and average monthly temperature per state are represented in the fixed effects portion of the model (<span class="math inline">\(\boldsymbol{Xꞵ}\)</span>). Fixed effects are used to gauge the extent of the variables’ contribution to the egg productivity rate. Random effects, on the other hand, capture behavioral differences between records within the same testing block. In this analysis, inter-state variation will be measured by the random effects portion (<span class="math inline">\(\boldsymbol{Z𝛾}\)</span>). Residual error (<span class="math inline">\(\boldsymbol{e}\)</span>) encompasses fluctuations not captured by the fixed or random effects.</p>
 </section>
 <section id="analysis-and-results" class="level2">
 <h2 class="anchored" data-anchor-id="analysis-and-results">Analysis and Results</h2>
