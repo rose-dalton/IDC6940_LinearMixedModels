@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Rose Dalton (Advisor: Dr. Cohen)">
-<meta name="dcterms.date" content="2026-03-02">
+<meta name="dcterms.date" content="2026-03-09">
 
 <title>U.S. Egg Production Analysis Using Linear Mixed Models</title>
 <style>
@@ -3264,7 +3264,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">March 2, 2026</p>
+      <p class="date">March 9, 2026</p>
     </div>
   </div>
   
@@ -3288,7 +3288,11 @@ window.Quarto = {
 </section>
 <section id="methods" class="level2">
 <h2 class="anchored" data-anchor-id="methods">Methods</h2>
-<p>The general linear mixed model may easily be applied to the egg production data. Egg count per 100 laying hens is the outcome under analysis, thus, serves as the outcome vector (<span class="math inline">\(\boldsymbol{y}\)</span>). Feed price and average monthly temperature per state are represented in the fixed effects portion of the model (<span class="math inline">\(\boldsymbol{Xꞵ}\)</span>). Fixed effects are used to gauge the extent of the variables’ contribution to the egg productivity rate. Random effects, on the other hand, capture behavioral differences between records within the same testing block. In this analysis, inter-state variation will be measured by the random effects portion (<span class="math inline">\(\boldsymbol{Z𝛾}\)</span>). Residual error (<span class="math inline">\(\boldsymbol{e}\)</span>) encompasses fluctuations not captured by the fixed or random effects(<span class="citation" data-cites="Mustafa2023_FixedRandomEffects_Medium">Mustafa (<a href="#ref-Mustafa2023_FixedRandomEffects_Medium" role="doc-biblioref">2023</a>)</span>).</p>
+<p>The general linear mixed model may be applied to the egg production dataset to examine factors associated with laying productivity. Linear mixed models are commonly used to analyze hierarchical or longitudinal datasets in which repeated observations are nested within higher-level groups(<span class="citation" data-cites="meteyard2020best">Meteyard and Davies (<a href="#ref-meteyard2020best" role="doc-biblioref">2020</a>)</span>). The response variable, <span class="math inline">\(\boldsymbol{y}\)</span>, represents eggs produced per 100 laying hens, a standard measure of laying productivity reported in USDA egg production statistics. Feed price, yearly variation, monthly variation, and average monthly temperature by state are represented in the fixed-effects portion of the model, <span class="math inline">\(\boldsymbol{\beta}\)</span>. Fixed effects are used to estimate the systematic contribution of these variables to egg productivity across the population of commercial egg-producing states. In contrast, inter-state variation is captured through the random-effects component <span class="math inline">\(\boldsymbol{\gamma}\)</span>, while the residual error term <span class="math inline">\(\mathbf{e}\)</span> represents fluctuations in productivity not explained by either the fixed or random components of the model(<span class="citation" data-cites="Mustafa2023_FixedRandomEffects_Medium">Mustafa (<a href="#ref-Mustafa2023_FixedRandomEffects_Medium" role="doc-biblioref">2023</a>)</span>).</p>
+<p>In this capstone project, the fixed-effects portion of the model represents systematic relationships between egg productivity and explanatory variables that are assumed to influence all states in a similar manner(<span class="citation" data-cites="Mustafa2023_FixedRandomEffects_Medium">Mustafa (<a href="#ref-Mustafa2023_FixedRandomEffects_Medium" role="doc-biblioref">2023</a>)</span>). Average monthly temperature and feed price are included as fixed effects because they represent measurable environmental and economic conditions expected to affect egg production across the industry as a whole. The associated fixed-effect coefficients therefore estimate the average change in eggs produced per 100 layers associated with variation in these predictors, while also accounting for seasonal and long-term patterns through month and year effects.</p>
+<p>The random-effects component accounts for unobserved heterogeneity between states. Commercial egg production systems vary across states due to differences in housing systems, farm size, management practices, breed composition, and regional climate conditions(<span class="citation" data-cites="incredibleegg2013">American Egg Board (<a href="#ref-incredibleegg2013" role="doc-biblioref">2013</a>)</span>). These factors may lead to systematic differences in baseline productivity that are not fully captured by the measured predictors. To accommodate this variability, the model includes state-level random effects, allowing each state to deviate from the overall intercept. This structure reflects the hierarchical nature of the dataset, in which repeated monthly observations are nested within states.</p>
+<p>In this study, state is modeled as a random effect rather than a fixed effect because the goal is not to estimate a separate parameter for each individual state, but rather to account for variability across the broader population of egg-producing states. Treating state as a random effect allows each state to have its own baseline productivity level while still estimating overall relationships between temperature, feed price, month, year, and egg production. This approach is appropriate when observations are grouped and repeatedly measured within the same units over time(<span class="citation" data-cites="sarafian2020lmm">Sarafian (<a href="#ref-sarafian2020lmm" role="doc-biblioref">2020</a>)</span>). Additionally, the modeling of state as a random effect reduces the number of parameters required compared with estimating separate fixed coefficients for each state and improves the model’s ability to generalize the estimated relationships beyond the specific states included in the dataset(<span class="citation" data-cites="Mustafa2023_FixedRandomEffects_Medium">Mustafa (<a href="#ref-Mustafa2023_FixedRandomEffects_Medium" role="doc-biblioref">2023</a>)</span>).</p>
+<hr>
 <p>The general linear mixed model (LMM) is defined below:</p>
 <p><span class="math display">\[
 \mathbf{y} = X\boldsymbol{\beta} + Z\boldsymbol{\gamma} + \mathbf{e}
@@ -3505,6 +3509,22 @@ window.Quarto = {
 <li><p>Use visuals to support your claims.</p></li>
 <li><p><strong>Tell a story about what the data reveals.</strong></p></li>
 </ul>
+<p><span class="math display">\[
+y =
+\beta_0
++
+\beta_1 \text{avgTemp}
++
+\beta_2 \text{feedPrice}
++
+\beta_3 \text{Year}
++
+\sum_{m=2}^{12} \beta_4 \text{Month}
++
+b_{0} \text{betweenStateEffects}
++
+\varepsilon \text{withinStateEffects}
+\]</span></p>
 </section>
 <section id="conclusion" class="level3">
 <h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
@@ -3517,13 +3537,16 @@ window.Quarto = {
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
 <p>ChatGPT-5.2 used to fine tune writing to improve grammar, sentence structure, and flow.</p>
-<p><span class="citation" data-cites="meteyard2020best">Meteyard and Davies (<a href="#ref-meteyard2020best" role="doc-biblioref">2020</a>)</span> <span class="citation" data-cites="brown2021introduction">Brown (<a href="#ref-brown2021introduction" role="doc-biblioref">2021</a>)</span> <span class="citation" data-cites="zhou2022using">Zhou et al. (<a href="#ref-zhou2022using" role="doc-biblioref">2022</a>)</span> <span class="citation" data-cites="adhikari2016comparing">Adhikari, Wu, and Caffe-Treml (<a href="#ref-adhikari2016comparing" role="doc-biblioref">2016</a>)</span> <span class="citation" data-cites="ryoo2011model">Ryoo (<a href="#ref-ryoo2011model" role="doc-biblioref">2011</a>)</span> <span class="citation" data-cites="schielzeth2020robustness">Schielzeth et al. (<a href="#ref-schielzeth2020robustness" role="doc-biblioref">2020</a>)</span> <span class="citation" data-cites="huitema2025fisher">Huitema (<a href="#ref-huitema2025fisher" role="doc-biblioref">2025</a>)</span> <span class="citation" data-cites="henderson1953variance">Henderson (<a href="#ref-henderson1953variance" role="doc-biblioref">1953</a>)</span> <span class="citation" data-cites="NOAA_ClimateAtAGlance_2026">NOAA National Centers for Environmental Information (<a href="#ref-NOAA_ClimateAtAGlance_2026" role="doc-biblioref">2026</a>)</span> <span class="citation" data-cites="USDA_ChickensAndEggs_2026">United States Department of Agriculture, National Agricultural Statistics Service (<a href="#ref-USDA_ChickensAndEggs_2026" role="doc-biblioref">2026b</a>)</span> <span class="citation" data-cites="USDA_AgriculturalPrices_2026">United States Department of Agriculture, National Agricultural Statistics Service (<a href="#ref-USDA_AgriculturalPrices_2026" role="doc-biblioref">2026a</a>)</span> <span class="citation" data-cites="Kim2024_HeatStress_LayingHens">Kim et al. (<a href="#ref-Kim2024_HeatStress_LayingHens" role="doc-biblioref">2024</a>)</span> <span class="citation" data-cites="Ao2007_MixedModels_HBS">Ao (<a href="#ref-Ao2007_MixedModels_HBS" role="doc-biblioref">2007</a>)</span> <span class="citation" data-cites="Mustafa2023_FixedRandomEffects_Medium">Mustafa (<a href="#ref-Mustafa2023_FixedRandomEffects_Medium" role="doc-biblioref">2023</a>)</span></p>
+<p><span class="citation" data-cites="meteyard2020best">Meteyard and Davies (<a href="#ref-meteyard2020best" role="doc-biblioref">2020</a>)</span> <span class="citation" data-cites="brown2021introduction">Brown (<a href="#ref-brown2021introduction" role="doc-biblioref">2021</a>)</span> <span class="citation" data-cites="zhou2022using">Zhou et al. (<a href="#ref-zhou2022using" role="doc-biblioref">2022</a>)</span> <span class="citation" data-cites="adhikari2016comparing">Adhikari, Wu, and Caffe-Treml (<a href="#ref-adhikari2016comparing" role="doc-biblioref">2016</a>)</span> <span class="citation" data-cites="ryoo2011model">Ryoo (<a href="#ref-ryoo2011model" role="doc-biblioref">2011</a>)</span> <span class="citation" data-cites="schielzeth2020robustness">Schielzeth et al. (<a href="#ref-schielzeth2020robustness" role="doc-biblioref">2020</a>)</span> <span class="citation" data-cites="huitema2025fisher">Huitema (<a href="#ref-huitema2025fisher" role="doc-biblioref">2025</a>)</span> <span class="citation" data-cites="henderson1953variance">Henderson (<a href="#ref-henderson1953variance" role="doc-biblioref">1953</a>)</span> <span class="citation" data-cites="NOAA_ClimateAtAGlance_2026">NOAA National Centers for Environmental Information (<a href="#ref-NOAA_ClimateAtAGlance_2026" role="doc-biblioref">2026</a>)</span> <span class="citation" data-cites="USDA_ChickensAndEggs_2026">United States Department of Agriculture, National Agricultural Statistics Service (<a href="#ref-USDA_ChickensAndEggs_2026" role="doc-biblioref">2026b</a>)</span> <span class="citation" data-cites="USDA_AgriculturalPrices_2026">United States Department of Agriculture, National Agricultural Statistics Service (<a href="#ref-USDA_AgriculturalPrices_2026" role="doc-biblioref">2026a</a>)</span> <span class="citation" data-cites="Kim2024_HeatStress_LayingHens">Kim et al. (<a href="#ref-Kim2024_HeatStress_LayingHens" role="doc-biblioref">2024</a>)</span> <span class="citation" data-cites="Ao2007_MixedModels_HBS">Ao (<a href="#ref-Ao2007_MixedModels_HBS" role="doc-biblioref">2007</a>)</span> <span class="citation" data-cites="Mustafa2023_FixedRandomEffects_Medium">Mustafa (<a href="#ref-Mustafa2023_FixedRandomEffects_Medium" role="doc-biblioref">2023</a>)</span> <span class="citation" data-cites="sarafian2020lmm">Sarafian (<a href="#ref-sarafian2020lmm" role="doc-biblioref">2020</a>)</span> <span class="citation" data-cites="incredibleegg2013">American Egg Board (<a href="#ref-incredibleegg2013" role="doc-biblioref">2013</a>)</span></p>
 
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-adhikari2016comparing" class="csl-entry" role="listitem">
 Adhikari, Sudha Neupane, Jixiang Wu, and Melanie Caffe-Treml. 2016. <span>“Comparing Linear Mixed Models for Preliminary Yield Trials That Follow Augmented Experimental Designs.”</span> <em>Conference on Applied Statistics in Agriculture (Kansas State University, New Prairie Press)</em>. <a href="https://newprairiepress.org/agstatconference/2016/proceedings/3">https://newprairiepress.org/agstatconference/2016/proceedings/3</a>.
+</div>
+<div id="ref-incredibleegg2013" class="csl-entry" role="listitem">
+American Egg Board. 2013. <span>“Landmark 50-Year Study Documents u.s. Egg Industry Reduced Environmental Footprint.”</span> American Egg Board. <a href="https://www.incredibleegg.org/professionals/manufacturers/market-trends/white-papers/landmark-50-year-study-documents-u-s-egg-industry-reduced-environmental-footprint/">https://www.incredibleegg.org/professionals/manufacturers/market-trends/white-papers/landmark-50-year-study-documents-u-s-egg-industry-reduced-environmental-footprint/</a>.
 </div>
 <div id="ref-Ao2007_MixedModels_HBS" class="csl-entry" role="listitem">
 Ao, Xiang. 2007. <span>“A Short Introduction to Linear Mixed Models.”</span> Harvard Business School Research Computing Services; <a href="https://www.hbs.edu/research-computing-services/Shared%20Documents/Training/mixed_models.pdf" class="uri">https://www.hbs.edu/research-computing-services/Shared%20Documents/Training/mixed_models.pdf</a>.
@@ -3551,6 +3574,9 @@ NOAA National Centers for Environmental Information. 2026. <span>“Climate at a
 </div>
 <div id="ref-ryoo2011model" class="csl-entry" role="listitem">
 Ryoo, Ji Hoon. 2011. <span>“Model Selection with the Linear Mixed Model for Longitudinal Data.”</span> <em>Multivariate Behavioral Research</em> 46: 598–624. <a href="https://doi.org/10.1080/00273171.2011.589264">https://doi.org/10.1080/00273171.2011.589264</a>.
+</div>
+<div id="ref-sarafian2020lmm" class="csl-entry" role="listitem">
+Sarafian, Ron. 2020. <span>“Linear Mixed Models.”</span> Ben-Gurion University. <a href="https://bookdown.org/ronsarafian/IntrotoDS/lme.html">https://bookdown.org/ronsarafian/IntrotoDS/lme.html</a>.
 </div>
 <div id="ref-schielzeth2020robustness" class="csl-entry" role="listitem">
 Schielzeth, Holger, Niels J. Dingemanse, Shinichi Nakagawa, David F. Westneat, Hassen Allegue, Céline Teplitsky, Denis Réale, Ned A. Dochtermann, László Zsolt Garamszegi, and Yimen G. Araya‐Ajoy. 2020. <span>“Robustness of Linear Mixed‐effects Models to Violations of Distributional Assumptions.”</span> <em>Methods in Ecology and Evolution</em> 11: 1141–52. <a href="https://doi.org/10.1111/2041-210x.13434">https://doi.org/10.1111/2041-210x.13434</a>.

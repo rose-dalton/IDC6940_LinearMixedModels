@@ -45,7 +45,15 @@ Within the present capstone project, LMMs provide an appropriate framework for m
  
 ## Methods
 
-The general linear mixed model may easily be applied to the egg production data. Egg count per 100 laying hens is the outcome under analysis, thus, serves as the outcome vector ($\boldsymbol{y}$). Feed price and average monthly temperature per state are represented in the fixed effects portion of the model ($\boldsymbol{Xꞵ}$). Fixed effects are used to gauge the extent of the variables’ contribution to the egg productivity rate. Random effects, on the other hand, capture behavioral differences between records within the same testing block. In this analysis, inter-state variation will be measured by the random effects portion ($\boldsymbol{Z𝛾}$). Residual error ($\boldsymbol{e}$) encompasses fluctuations not captured by the fixed or random effects(@Mustafa2023_FixedRandomEffects_Medium). 
+The general linear mixed model may be applied to the egg production dataset to examine factors associated with laying productivity. Linear mixed models are commonly used to analyze hierarchical or longitudinal datasets in which repeated observations are nested within higher-level groups(@meteyard2020best). The response variable, $\boldsymbol{y}$, represents eggs produced per 100 laying hens, a standard measure of laying productivity reported in USDA egg production statistics. Feed price, yearly variation, monthly variation, and average monthly temperature by state are represented in the fixed-effects portion of the model, $\boldsymbol{\beta}$. Fixed effects are used to estimate the systematic contribution of these variables to egg productivity across the population of commercial egg-producing states. In contrast, inter-state variation is captured through the random-effects component $\boldsymbol{\gamma}$, while the residual error term $\mathbf{e}$ represents fluctuations in productivity not explained by either the fixed or random components of the model(@Mustafa2023_FixedRandomEffects_Medium).
+
+In this capstone project, the fixed-effects portion of the model represents systematic relationships between egg productivity and explanatory variables that are assumed to influence all states in a similar manner(@Mustafa2023_FixedRandomEffects_Medium). Average monthly temperature and feed price are included as fixed effects because they represent measurable environmental and economic conditions expected to affect egg production across the industry as a whole. The associated fixed-effect coefficients therefore estimate the average change in eggs produced per 100 layers associated with variation in these predictors, while also accounting for seasonal and long-term patterns through month and year effects.
+
+The random-effects component accounts for unobserved heterogeneity between states. Commercial egg production systems vary across states due to differences in housing systems, farm size, management practices, breed composition, and regional climate conditions(@incredibleegg2013). These factors may lead to systematic differences in baseline productivity that are not fully captured by the measured predictors. To accommodate this variability, the model includes state-level random effects, allowing each state to deviate from the overall intercept. This structure reflects the hierarchical nature of the dataset, in which repeated monthly observations are nested within states.
+
+In this study, state is modeled as a random effect rather than a fixed effect because the goal is not to estimate a separate parameter for each individual state, but rather to account for variability across the broader population of egg-producing states. Treating state as a random effect allows each state to have its own baseline productivity level while still estimating overall relationships between temperature, feed price, month, year, and egg production. This approach is appropriate when observations are grouped and repeatedly measured within the same units over time(@sarafian2020lmm). Additionally, the modeling of state as a random effect reduces the number of parameters required compared with estimating separate fixed coefficients for each state and improves the model’s ability to generalize the estimated relationships beyond the specific states included in the dataset(@Mustafa2023_FixedRandomEffects_Medium).
+
+---
 
 The general linear mixed model (LMM) is defined below:
 
@@ -216,6 +224,23 @@ This scatterplot seems to indicate that a slightly positive relationship exists 
 
 ```
 
+$$
+y =
+\beta_0
++
+\beta_1 \text{avgTemp}
++
+\beta_2 \text{feedPrice}
++
+\beta_3 \text{Year}
++
+\sum_{m=2}^{12} \beta_4 \text{Month}
++
+b_{0} \text{betweenStateEffects}
++
+\varepsilon \text{withinStateEffects}
+$$
+
 ### Conclusion
 
 -   Summarize your key findings.
@@ -239,3 +264,5 @@ ChatGPT-5.2 used to fine tune writing to improve grammar, sentence structure, an
 @Kim2024_HeatStress_LayingHens
 @Ao2007_MixedModels_HBS
 @Mustafa2023_FixedRandomEffects_Medium
+@sarafian2020lmm
+@incredibleegg2013
