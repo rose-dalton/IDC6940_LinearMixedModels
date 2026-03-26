@@ -309,9 +309,13 @@ This graphic represents each state’s deviation from the overall mean egg produ
 
 ### Conclusion
 
--   Summarize your key findings.
+This analysis examined the relationship between environmental, economic, and chronological factors and egg production using a linear mixed-effects model. The results demonstrated a strong upward trend in egg productivity over time, indicating substantial long-term improvements in production efficiency across the U.S. egg industry. Feed price was found to have a positive association with productivity, suggesting that economic conditions may influence management decisions and efficiency. By comparison, average temperature exhibited a more mild effect, indicating that environmental conditions play a smaller but still measurable role in production outcomes.
 
--   Discuss the implications of your results.
+In addition to these fixed effects, the model identified significant variability between states, with state-level differences accounting for a large proportion of the total variation in egg production. This finding highlights the importance of regional factors such as management practices, production systems, and local conditions, which are not fully captured by the observed predictors.
+
+The results demonstrate that egg production is driven by a combination of long-term industry improvements, seasonal patterns, and substantial differences across states. By incorporating both fixed and random effects, the mixed-effects modeling approach provides a comprehensive framework for understanding these dynamics.
+
+Overall, these findings suggest that while broad economic and environmental factors influence egg productivity, state-level characteristics play a critical role in determining baseline production levels. This has important implications for both producers and policymakers, as efforts to improve productivity may benefit from strategies tailored to regional conditions rather than relying solely on nationwide trends.
 
 ## References
 ChatGPT-5.2 used to fine tune writing to improve grammar, sentence structure, and flow. 
