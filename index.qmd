@@ -318,7 +318,7 @@ The results demonstrate that egg production is driven by a combination of long-t
 Overall, these findings suggest that while broad economic and environmental factors influence egg productivity, state-level characteristics play a critical role in determining baseline production levels. This has important implications for both producers and policymakers, as efforts to improve productivity may benefit from strategies tailored to regional conditions rather than relying solely on nationwide trends.
 
 ## References
-ChatGPT-5.2 used to fine tune writing to improve grammar, sentence structure, and flow. 
+ChatGPT-5.2 used to fine tune writing, extract data from original sources, and develop effective code. 
 
 @meteyard2020best 
 @brown2021introduction
