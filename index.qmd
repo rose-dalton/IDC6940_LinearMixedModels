@@ -177,7 +177,7 @@ boxPlot + geom_boxplot(outlier.alpha = 0.3) +
     y = "Eggs per 100 Layers") +
   theme_bw()
 ```
-This plot indicates that there are disparities in egg production across months. Productivity appears to be higher in January, March, May, July, August, October, and December. The least productive month is clearly February. 
+This plot indicates that there are disparities in egg production across months. Productivity appears to be higher in January, March, May, July, August, October, and December. The least productive month is evidently February. 
 ---
 
 ```{r, warning=FALSE, echo=TRUE}
@@ -192,7 +192,7 @@ scatter + geom_point(alpha = 0.25) +
     y = "Eggs per 100 Layers") +
   theme_bw()
 ```
-A notable feature of this scatterplot is how the productivity trend declines sharply as temperature exceeds 75 degrees F. @Kim2024_HeatStress_LayingHens reaffirm that laying hens are susceptible to heat stress. A temperature–humidity index of 76-81 degrees is considered dangerous and over 81 is categorized as emergency.
+A notable feature of this scatterplot is how the productivity trend declines sharply as temperature exceeds 75 degrees F. @Kim2024_HeatStress_LayingHens explains that laying hens are susceptible to heat stress under high temperature conditions. A temperature–humidity index of 76-81 degrees is considered dangerous and over 81 is categorized as emergency.
 ---
 
 ```{r, warning=FALSE, echo=TRUE}
@@ -207,7 +207,7 @@ scatter2 + geom_point(alpha = 0.25) +
        y = "Eggs per 100 Layers") +
   theme_bw()
 ```
-This scatterplot seems to indicate that a slightly positive relationship exists between feed price and eggs/100 layers. This is counterintuitive to preconceived notions.
+This scatterplot seems to indicate that a slightly positive relationship exists between feed price and eggs/100 layers. This is counter intuitive to preconceived theories that a negative relationship may exist.
 ---
 
 ### Modeling and Results
@@ -313,9 +313,7 @@ This analysis examined the relationship between environmental, economic, and chr
 
 In addition to these fixed effects, the model identified significant variability between states, with state-level differences accounting for a large proportion of the total variation in egg production. This finding highlights the importance of regional factors such as management practices, production systems, and local conditions, which are not fully captured by the observed predictors.
 
-The results demonstrate that egg production is driven by a combination of long-term industry improvements, seasonal patterns, and substantial differences across states. By incorporating both fixed and random effects, the mixed-effects modeling approach provides a comprehensive framework for understanding these dynamics.
-
-Overall, these findings suggest that while broad economic and environmental factors influence egg productivity, state-level characteristics play a critical role in determining baseline production levels. This has important implications for both producers and policymakers, as efforts to improve productivity may benefit from strategies tailored to regional conditions rather than relying solely on nationwide trends.
+Overall, the results demonstrate that egg production is driven by a combination of long-term industry improvements, seasonal patterns, and substantial differences across states. By incorporating both fixed and random effects, the mixed-effects modeling approach provides a comprehensive framework for understanding these dynamics. These findings suggest that while broad economic and environmental factors influence egg productivity, state-level characteristics play a critical role in determining baseline production levels. This has important implications for both producers and policymakers, as efforts to improve productivity may benefit from strategies tailored to regional conditions rather than relying solely on nationwide trends.
 
 ## References
 ChatGPT-5.2 used to fine tune writing, extract data from original sources, and develop effective code. 
