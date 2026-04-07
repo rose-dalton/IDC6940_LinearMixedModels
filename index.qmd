@@ -288,8 +288,8 @@ This plot indicates that there are disparities in egg production across months. 
 # temperature scatterplot
 scatter = eggData_clean %>% ggplot(mapping = aes(x=avgTemp, y=eggsPer100Layers))
 
-scatter + geom_point(alpha = 0.25) +
-  geom_smooth(method = "loess", se = TRUE, span = 0.75) +
+scatter + geom_point(color = "#008080", alpha = 0.25) +
+  geom_smooth(method = "loess", se = TRUE, span = 0.75, color = "navy") + 
   labs(title = "Eggs per 100 Layers vs Average Temperature",
     x = "Average Temperature (°F)",
     y = "Eggs per 100 Layers",
@@ -304,8 +304,8 @@ A notable feature of this scatterplot is how the productivity trend declines sha
 # feed scatterplot
 scatter2 = eggData_clean %>% ggplot(mapping = aes(x=feedPrice, y=eggsPer100Layers))
 
-scatter2 + geom_point(alpha = 0.25) +
-  geom_smooth(method = "loess", se = TRUE, span = 0.75) +
+scatter2 + geom_point(color = "#008080", alpha = 0.25) +
+  geom_smooth(method = "loess", se = TRUE, span = 0.75, color = "navy") +
   labs(title = "Eggs per 100 Layers vs Feed Price",
        x = "Feed Price (USD/bushel)",
        y = "Eggs per 100 Layers",
@@ -461,7 +461,7 @@ Model 2 revealed a strong, positive temporal trend, with egg production increasi
 
 Model 3 demonstrated clear seasonal variation in egg production, with several months showing significant deviations from the reference month. Notably, production tends to decline in late winter and early spring and increase in late summer and winter months, reflecting recurring cyclical patterns in productivity.
 
-Together, these findings indicate that egg production is driven by a combination of long-term industry improvements, seasonal fluctuations, and external environmental and economic factors.
+All in all, these findings indicate that egg production is driven by a combination of long-term industry improvements, seasonal fluctuations, and external environmental and economic factors.
 
 ```{r, warning=FALSE, echo=TRUE}
 model1_data <- model.frame(egg_mod1)
@@ -469,8 +469,8 @@ model1_data <- model.frame(egg_mod1)
 model1_data$fitted <- fitted(egg_mod1)
 
 ggplot(model1_data, aes(x = fitted, y = eggsPer100Layers)) +
-  geom_point(alpha = 0.3) +
-  geom_abline(slope = 1, intercept = 0, color = "red") +
+  geom_point(color = "#008080", alpha = 0.3) +
+  geom_abline(slope = 1, intercept = 0, color = "navy") +
   labs(
     title = "Observed vs Fitted Values (Model 1)",
     x = "Fitted Values",
@@ -501,7 +501,9 @@ plot(ggpredict(egg_mod1, terms = "feedPrice")) +
   )
 ```
 
+Figure 6 exhibits a positive association between temperature and egg production, with predicted output increasing gradually as temperature rises. The relationship appears approximately linear. However, the relatively wide confidence interval suggests large uncertainty in the estimated effect. This feature suggests that while temperature contributes to production differences, other elements, such as feed costs, management practices, and seasonal effects, likely play a more substantial role. The predicted linear trend may overstate the true relationship, especially since egg production is known to decrease under extreme temperature conditions.
 
+Figure 7 also estimates a positive relationship, in which, predicted egg productivity increases as feed price rises. The magnitude of the feed price effect appears substantially larger than that of temperature, suggesting it plays a more prominent role in explaining variation within this model. The confidence interval is more narrow than the temperature estimate but still demonstrates moderate uncertainty, especially at higher feed prices. 
 
 ------------------------------------------------------------------------
 
@@ -511,8 +513,8 @@ model2_data <- model.frame(egg_mod2)
 model2_data$fitted <- fitted(egg_mod2)
 
 ggplot(model2_data, aes(x = fitted, y = eggsPer100Layers)) +
-  geom_point(alpha = 0.3) +
-  geom_abline(slope = 1, intercept = 0, color = "red") +
+  geom_point(color = "#008080", alpha = 0.3) +
+  geom_abline(slope = 1, intercept = 0, color = "navy") +
   labs(
     title = "Observed vs Fitted Values (Model 2)",
     x = "Fitted Values",
@@ -521,7 +523,7 @@ ggplot(model2_data, aes(x = fitted, y = eggsPer100Layers)) +
   ) +
   theme_minimal()
 ```
-
+Figure 8 shows that Model 2 has a stronger alignment along the reference line compared to Model 1. This is indicative of improved model fit and predictive accuracy. The dispersion cloud of points around the line is reduced, suggesting that the model captures a greater proportion of variability in egg production. Although, some spreading remains, particularly at higher fitted values. 
 
 ```{r, warning=FALSE, echo=TRUE}
 model2_data <- model.frame(egg_mod2)
@@ -529,8 +531,8 @@ model2_data <- model.frame(egg_mod2)
 model2_data$fitted_year <- fitted(egg_mod2)
 
 ggplot(model2_data, aes(x = Year)) +
-  geom_point(aes(y = eggsPer100Layers), alpha = 0.1) +
-  geom_line(aes(y = fitted_year), color = "red", linewidth = 1) +
+  geom_point(aes(y = eggsPer100Layers), color = "#008080", alpha = 0.1) +
+  geom_line(aes(y = fitted_year), color = "navy", linewidth = 1) +
   labs(
     title = "Egg Production Over Time (Model 2)",
     x = "Year",
@@ -546,8 +548,8 @@ model3_data <- model.frame(egg_mod3)
 model3_data$fitted <- fitted(egg_mod3)
 
 ggplot(model3_data, aes(x = fitted, y = eggsPer100Layers)) +
-  geom_point(alpha = 0.3) +
-  geom_abline(slope = 1, intercept = 0, color = "red") +
+  geom_point(color = "#008080", alpha = 0.3) +
+  geom_abline(slope = 1, intercept = 0, color = "navy") +
   labs(
     title = "Observed vs Fitted Values (Model 3)",
     x = "Fitted Values",
@@ -556,7 +558,7 @@ ggplot(model3_data, aes(x = fitted, y = eggsPer100Layers)) +
   ) +
   theme_minimal()
 ```
-
+Based on the tightly clustered observation points around the reference line, Figure 10 serves as evidence that Model 3 has the best overall fit among the models considered. Although some variability remains, particularly at higher fitted values, Model 3 provides a substantial improvement in predictive accuracy and demonstrates the importance of accounting for seasonality in egg production.
 
 ```{r, warning=FALSE, echo=TRUE}
 eggData_clean %>%
@@ -572,11 +574,7 @@ eggData_clean %>%
     caption = "Figure 11"
   )
 ```
-
-
-```{r}
-
-```
+Figure 11 demonstrates a clear seasonal pattern in egg production by month. Production is notably lowest in February, while several peak periods occur in the spring, summer, and late fall months. This pattern helps explain the improved performance of Model 3, as incorporating monthly effects captures important structure that was not accounted for in earlier models. The irregular shape of the seasonal trend further suggests that multiple environmental and biological factors contribute to variation in production.
 
 
 ------------------------------------------------------------------------
@@ -602,35 +600,13 @@ average. The wide spread of values indicates substantial variability in egg prod
 
 ### Conclusion
 
-This analysis examined the relationship between environmental, economic,
-and chronological factors and egg production using a linear
-mixed-effects model. The results demonstrated a strong upward trend in
-egg productivity over time, indicating substantial long-term
-improvements in production efficiency across the U.S. egg industry. Feed
-price was found to have a positive association with productivity,
-suggesting that economic conditions may influence management decisions
-and efficiency. By comparison, average temperature exhibited a more mild
-effect, indicating that environmental conditions play a smaller but
-still measurable role in production outcomes.
+This analysis examined the relationship between environmental, economic, and temporal factors and egg production using a series of linear mixed-effects models. Comparison across models revealed that incorporating seasonal effects substantially improved model performance, indicating that month-to-month variation is a primary driver of egg production. The observed seasonal pattern demonstrates consistent fluctuations throughout the year, with distinct peaks and troughs, highlighting the importance of accounting for cyclical production dynamics.
 
-In addition to these fixed effects, the model identified significant
-variability between states, with state-level differences accounting for
-a large proportion of the total variation in egg production. This
-finding highlights the importance of regional factors such as management
-practices, production systems, and local conditions, which are not fully
-captured by the observed predictors.
+Among the fixed effects, feed price exhibited a strong positive association with egg production in simpler models; however, this relationship is likely influenced by underlying temporal or economic trends rather than representing a direct causal effect. In contrast, average temperature showed a modest but consistent influence on production, suggesting that environmental conditions contribute to variability, though to a lesser extent than seasonal factors.
 
-Overall, the results demonstrate that egg production is driven by a
-combination of long-term industry improvements, seasonal patterns, and
-substantial differences across states. By incorporating both fixed and
-random effects, the mixed-effects modeling approach provides a
-comprehensive framework for understanding these dynamics. These findings
-suggest that while broad economic and environmental factors influence
-egg productivity, state-level characteristics play a critical role in
-determining baseline production levels. This has important implications
-for both producers and policymakers, as efforts to improve productivity
-may benefit from strategies tailored to regional conditions rather than
-relying solely on nationwide trends.
+In addition to these effects, substantial variability across states was observed, with state-level random intercepts indicating large differences in baseline production levels. These persistent differences suggest that unobserved structural factors, such as management practices, production systems, and regional conditions, play a significant role in shaping productivity outcomes.
+
+Overall, the results demonstrate that egg production is driven by a combination of strong seasonal patterns, broader economic and environmental influences, and considerable state-level heterogeneity. The progression from simpler to more comprehensive models highlights the importance of properly accounting for seasonality and hierarchical structure in the data. These findings suggest that while national trends provide useful context, effective strategies to improve productivity should account for both seasonal dynamics and region-specific conditions.
 
 ## References
 
