@@ -221,7 +221,7 @@ of Agriculture’s National Agricultural Statistics Service monthly report
 archive (@USDA_ChickensAndEggs_2026, @USDA_AgriculturalPrices_2026).
 Temperature data was sourced from the National Oceanic and Atmospheric
 Administration’s Climate at a Glance National Time Series archive
-(@NOAA_ClimateAtAGlance_2026).
+(@NOAA_ClimateAtAGlance_2026). The complete dataset consists of 7491 observations.
 
 | Variable | Type | Description |
 |------------------------|------------------------|------------------------|
