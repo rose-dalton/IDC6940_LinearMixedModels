@@ -5,6 +5,7 @@ author: "Rose Dalton (Advisor: Dr. Cohen)"
 date: '`r Sys.Date()`'
 format:
   html:
+    theme: cerulean
     code-fold: true
   pdf:
     include-in-header:
@@ -256,8 +257,8 @@ eggData_clean <- eggData %>%
 #time series plot
 timeSeries = eggData_clean %>% ggplot(mapping = aes(x=Date, y=eggsPer100Layers)) 
 
-timeSeries + geom_line(alpha = 0.6) +
-  geom_smooth(method = "loess", se = FALSE, span = 0.25) +
+timeSeries + geom_line(color = "#008080", alpha = 0.6) +
+  geom_smooth(method = "loess", se = FALSE, span = 0.25, color = "navy") +
   facet_wrap(~ state, ncol = 5, scales = "free_y") +
   labs(title = "Eggs per 100 Layers Over Time (2000–2024)",
     x = "Date",
@@ -269,15 +270,19 @@ timeSeries + geom_line(alpha = 0.6) +
 Seasonality appears present for every state. This is evidenced by the regularly repeating peaks and troughs. We can presume that laying productivity follows an annual pattern. While nearly all states examined exhibit some degree of increase in egg productivity, Alabama yielded a unique graph. This trend line is generally consistent over the 25 years with minor variability present.
 
 ```{r, warning=FALSE, echo=TRUE}
-
 # month box plot
 boxPlot = eggData_clean %>% ggplot(mapping = aes(x=factor(Month), y=eggsPer100Layers))
 
-boxPlot + geom_boxplot(outlier.alpha = 0.3) +
-  labs(title = "Seasonality: Eggs per 100 Layers by Month",
-    x = "Month",
-    y = "Eggs per 100 Layers",
-    caption = "Figure 2") +
+boxPlot +
+geom_boxplot(
+  fill = "#008080",        
+  color = "navy",          
+  outlier.alpha = 0.3) +
+labs(
+  title = "Seasonality: Eggs per 100 Layers by Month",
+  x = "Month",
+  y = "Eggs per 100 Layers",
+  caption = "Figure 2") +
   theme_bw()
 ```
 
@@ -484,21 +489,34 @@ Figure 5 indicates that Model 1 reasonably captures the overall linear trend in 
 ```{r, warning=FALSE, echo=TRUE}
 library(ggeffects)
 
-plot(ggpredict(egg_mod1, terms = "avgTemp")) +
+predictTemp <- ggpredict(egg_mod1, terms = "avgTemp")
+predictFeed <- ggpredict(egg_mod1, terms = "feedPrice")
+
+ggplot(predictTemp, aes(x = x, y = predicted)) +
+  geom_line(color = "navy", size = 1.2) +
+  geom_point(color = "#008080") +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high),
+              fill = "navy", alpha = 0.15) +
   labs(
     title = "Effect of Temperature on Egg Production (Model 1)",
     x = "Average Monthly Temperature (°F)",
     y = "Predicted Eggs per 100 Layers",
     caption = "Figure 6"
-  )
+  ) +
+  theme_bw()
 
-plot(ggpredict(egg_mod1, terms = "feedPrice")) +
+ggplot(predictFeed, aes(x = x, y = predicted)) +
+  geom_line(color = "navy", size = 1.2) +
+  geom_point(color = "#008080") +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high),
+              fill = "navy", alpha = 0.15) +
   labs(
     title = "Effect of Feed Price on Egg Production (Model 1)",
     x = "Feed Price (USD/bushel)",
     y = "Predicted Eggs per 100 Layers",
     caption = "Figure 7"
-  )
+  ) +
+  theme_bw()
 ```
 
 Figure 6 exhibits a positive association between temperature and egg production, with predicted output increasing gradually as temperature rises. The relationship appears approximately linear. However, the relatively wide confidence interval suggests large uncertainty in the estimated effect. This feature suggests that while temperature contributes to production differences, other elements, such as feed costs, management practices, and seasonal effects, likely play a more substantial role. The predicted linear trend may overstate the true relationship, especially since egg production is known to decrease under extreme temperature conditions.
@@ -565,8 +583,8 @@ eggData_clean %>%
   group_by(Month) %>%
   summarise(mean_eggs = mean(eggsPer100Layers, na.rm = TRUE)) %>%
   ggplot(aes(x = Month, y = mean_eggs)) +
-  geom_line() +
-  geom_point() +
+  geom_line(color = "navy", size = 0.75) +
+  geom_point(color = "#008080") +
   labs(
     title = "Average Egg Production Per Month (Model 3)",
     x = "Month",
@@ -584,7 +602,7 @@ re_state <- ranef(egg_mod1)$state
 re_state$state <- rownames(re_state)
 
 ggplot(re_state, aes(x = reorder(state, `(Intercept)`), y = `(Intercept)`)) +
-  geom_point() +
+  geom_point(color = "#008080") +
   coord_flip() +
   labs(
     title = "State-Level Random Intercepts",
