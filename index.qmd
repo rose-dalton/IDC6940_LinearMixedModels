@@ -25,8 +25,7 @@ editor:
     wrap: 72
 ---
 
-Slides: [slides.html](slides.html){target="_blank"} ( Go to `slides.qmd`
-to edit)
+Slides: [slides.html](slides.html){target="_blank"}
 
 ## Introduction
 
@@ -474,7 +473,7 @@ tbl_regression(
 
 ------------------------------------------------------------------------
 
-The results from the mixed-effects models highlight several key factors influencing egg production. In Model 1, both average temperature and feed price were found to be statistically significant predictors of egg production, with feed price exhibiting a substantially larger effect size. This suggests that economic conditions may play a stronger role in shaping productivity than environmental factors alone.
+The results from the mixed-effects models highlight several key factors influencing egg production. In Model 1, both average temperature and feed price were found to be statistically significant predictors of egg production, with feed price exhibiting a substantially larger effect size. This suggests that economic conditions may reflect broader economic or temporal trends rather than a direct causal mechanism.
 
 Model 2 revealed a strong, positive temporal trend, with egg production increasing by approximately 12 eggs per 100 layers per year. This may be indicative of substantial improvements in production efficiency over the study period.
 
@@ -542,7 +541,7 @@ ggplot(predictFeed, aes(x = x, y = predicted)) +
 )
 ```
 
-Figure 6 exhibits a positive association between temperature and egg production, with predicted output increasing gradually as temperature rises. The relationship appears approximately linear. However, the relatively wide confidence interval suggests large uncertainty in the estimated effect. This feature suggests that while temperature contributes to production differences, other elements, such as feed costs, management practices, and seasonal effects, likely play a more substantial role. The predicted linear trend may overstate the true relationship, especially since egg production is known to decrease under extreme temperature conditions.
+Figure 6 exhibits a positive association between temperature and egg production, with predicted output increasing gradually as temperature rises. The relationship appears approximately linear. However, the relatively wide confidence interval suggests large uncertainty in the estimated effect. This feature suggests that while temperature contributes to production differences, other elements, such as feed costs, management practices, and seasonal effects, likely play a more substantial role. The predicted trend may overstate the true relationship, since egg production is known to decrease under extreme conditions. The linear implication may mask nonlinear effects such as heat stress at higher temperatures.
 
 Figure 7 also estimates a positive relationship, in which, predicted egg productivity increases as feed price rises. The magnitude of the feed price effect appears substantially larger than that of temperature, suggesting it plays a more prominent role in explaining variation within this model. The confidence interval is more narrow than the temperature estimate but still demonstrates moderate uncertainty, especially at higher feed prices. 
 
@@ -589,7 +588,7 @@ ggplot(model3_data, aes(x = fitted, y = eggsPer100Layers)) +
   plot.title = element_text(face = "bold", hjust = 0.5)
 )
 ```
-Based on the tightly clustered observation points around the reference line, Figure 9 serves as evidence that Model 3 has the best overall fit among the models considered. Although some variability remains, particularly at higher fitted values, Model 3 provides a substantial improvement in predictive accuracy and demonstrates the importance of accounting for seasonality in egg production.
+Based on the tightly clustered observation points around the reference line, Figure 9 serves as evidence that Model 3 has the best overall fit among the models considered. Model 2 captures long-term growth but fails to account for seasonal variation, while Model 1 omits both chronological and seasonal structure. Model 3 improves fit by incorporating systematic monthly variation, which explains a substantial portion of previously unexplained variance. Although some variability remains, particularly at higher fitted values, Model 3 provides a substantial improvement in predictive accuracy and demonstrates the importance of accounting for seasonality in egg production.
 
 ```{r, warning=FALSE, echo=TRUE}
 eggData_clean %>%
@@ -647,9 +646,6 @@ Overall, the results demonstrate that egg production is driven by a combination 
 
 ## References
 
-ChatGPT-5.2 used to fine tune writing, extract data from original
-sources, and develop effective code.
-
 @meteyard2020best @brown2021introduction @zhou2022using
 @adhikari2016comparing @ryoo2011model @schielzeth2020robustness
 @huitema2025fisher @henderson1953variance @NOAA_ClimateAtAGlance_2026
@@ -657,3 +653,6 @@ sources, and develop effective code.
 @Kim2024_HeatStress_LayingHens @Ao2007_MixedModels_HBS
 @Mustafa2023_FixedRandomEffects_Medium @sarafian2020lmm
 @incredibleegg2013
+
+ChatGPT-5.2 used to fine tune writing, extract data from original
+sources, and develop effective code.
