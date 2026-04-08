@@ -5,7 +5,9 @@ author: "Rose Dalton (Advisor: Dr. Cohen)"
 date: '`r Sys.Date()`'
 format:
   html:
-    theme: cerulean
+    theme:
+      - cosmo
+      - custom.scss
     code-fold: true
   pdf:
     include-in-header:
@@ -264,7 +266,10 @@ timeSeries + geom_line(color = "#008080", alpha = 0.6) +
     x = "Date",
     y = "Eggs per 100 Layers",
     caption = "Figure 1") +
-  theme_bw()
+  theme_bw() + 
+  theme(
+  plot.title = element_text(face = "bold", hjust = 0.5)
+)
 ```
 
 Seasonality appears present for every state. This is evidenced by the regularly repeating peaks and troughs. We can presume that laying productivity follows an annual pattern. While nearly all states examined exhibit some degree of increase in egg productivity, Alabama yielded a unique graph. This trend line is generally consistent over the 25 years with minor variability present.
@@ -283,7 +288,10 @@ labs(
   x = "Month",
   y = "Eggs per 100 Layers",
   caption = "Figure 2") +
-  theme_bw()
+  theme_bw() + 
+  theme(
+  plot.title = element_text(face = "bold", hjust = 0.5)
+)
 ```
 
 This plot indicates that there are disparities in egg production across months. Productivity appears to be higher in January, March, May, July, August, October, and December. The least productive month is evidently February.
@@ -299,7 +307,10 @@ scatter + geom_point(color = "#008080", alpha = 0.25) +
     x = "Average Temperature (°F)",
     y = "Eggs per 100 Layers",
     caption = "Figure 3") +
-  theme_bw()
+  theme_bw() + 
+  theme(
+  plot.title = element_text(face = "bold", hjust = 0.5)
+)
 ```
 
 A notable feature of this scatterplot is how the productivity trend declines sharply as temperature exceeds 75 degrees F. @Kim2024_HeatStress_LayingHens explains that laying hens are susceptible to heat stress under high temperature conditions. A temperature–humidity index of 76-81 degrees is considered dangerous and over 81 is categorized as emergency.
@@ -315,7 +326,10 @@ scatter2 + geom_point(color = "#008080", alpha = 0.25) +
        x = "Feed Price (USD/bushel)",
        y = "Eggs per 100 Layers",
     caption = "Figure 4") +
-  theme_bw()
+  theme_bw() + 
+  theme(
+  plot.title = element_text(face = "bold", hjust = 0.5)
+)
 ```
 
 This scatterplot seems to indicate that a slightly positive relationship exists between feed price and eggs/100 layers. This is counter intuitive to preconceived theories that a negative relationship may exist.
@@ -482,7 +496,10 @@ ggplot(model1_data, aes(x = fitted, y = eggsPer100Layers)) +
     y = "Observed Eggs per 100 Layers",
     caption = "Figure 5"
   ) +
-  theme_minimal()
+  theme_minimal() + 
+  theme(
+  plot.title = element_text(face = "bold", hjust = 0.5)
+)
 ```
 Figure 5 indicates that Model 1 reasonably captures the overall linear trend in egg production, as evidenced by the alignment of points along the red reference line. However, there is considerable cloud of observation points around the line, suggesting that much variability remains unexplained. From this, it can be deduced that while the model provides a baseline fit, further refinement, such as incorporating seasonal effects, may improve prediction accuracy.
 
@@ -503,7 +520,10 @@ ggplot(predictTemp, aes(x = x, y = predicted)) +
     y = "Predicted Eggs per 100 Layers",
     caption = "Figure 6"
   ) +
-  theme_bw()
+  theme_bw() + 
+  theme(
+  plot.title = element_text(face = "bold", hjust = 0.5)
+)
 
 ggplot(predictFeed, aes(x = x, y = predicted)) +
   geom_line(color = "navy", size = 1.2) +
@@ -516,7 +536,10 @@ ggplot(predictFeed, aes(x = x, y = predicted)) +
     y = "Predicted Eggs per 100 Layers",
     caption = "Figure 7"
   ) +
-  theme_bw()
+  theme_bw() + 
+  theme(
+  plot.title = element_text(face = "bold", hjust = 0.5)
+)
 ```
 
 Figure 6 exhibits a positive association between temperature and egg production, with predicted output increasing gradually as temperature rises. The relationship appears approximately linear. However, the relatively wide confidence interval suggests large uncertainty in the estimated effect. This feature suggests that while temperature contributes to production differences, other elements, such as feed costs, management practices, and seasonal effects, likely play a more substantial role. The predicted linear trend may overstate the true relationship, especially since egg production is known to decrease under extreme temperature conditions.
@@ -539,26 +562,13 @@ ggplot(model2_data, aes(x = fitted, y = eggsPer100Layers)) +
     y = "Observed Eggs per 100 Layers",
     caption = "Figure 8"
   ) +
-  theme_minimal()
+  theme_bw() + 
+  theme(
+  plot.title = element_text(face = "bold", hjust = 0.5)
+)
 ```
-Figure 8 shows that Model 2 has a stronger alignment along the reference line compared to Model 1. This is indicative of improved model fit and predictive accuracy. The dispersion cloud of points around the line is reduced, suggesting that the model captures a greater proportion of variability in egg production. Although, some spreading remains, particularly at higher fitted values. 
+Figure 8 shows that Model 2 has a stronger alignment along the reference line compared to Model 1. This is indicative of improved model fit and predictive accuracy. The dispersion cloud of points around the line is reduced, suggesting that the model captures a greater proportion of variability in egg production. This suggests that year is a strong predictor of long-term changes in productivity.
 
-```{r, warning=FALSE, echo=TRUE}
-model2_data <- model.frame(egg_mod2)
-
-model2_data$fitted_year <- fitted(egg_mod2)
-
-ggplot(model2_data, aes(x = Year)) +
-  geom_point(aes(y = eggsPer100Layers), color = "#008080", alpha = 0.1) +
-  geom_line(aes(y = fitted_year), color = "navy", linewidth = 1) +
-  labs(
-    title = "Egg Production Over Time (Model 2)",
-    x = "Year",
-    y = "Egg Production per 100 Layers",
-    caption = "Figure 9"
-  )
-```
-Figure 9 displays observed egg production over time along with fitted values from the linear mixed-effects model. The scatter of points represents individual observations, while the red line shows the model-estimated trend. Despite considerable variability in the observed data, the model captures the overall upward trajectory, suggesting that year is a strong predictor of long-term changes in productivity.
 
 ```{r, warning=FALSE, echo=TRUE}
 model3_data <- model.frame(egg_mod3)
@@ -572,11 +582,14 @@ ggplot(model3_data, aes(x = fitted, y = eggsPer100Layers)) +
     title = "Observed vs Fitted Values (Model 3)",
     x = "Fitted Values",
     y = "Observed Eggs per 100 Layers",
-    caption = "Figure 10"
+    caption = "Figure 9"
   ) +
-  theme_minimal()
+  theme_bw() + 
+  theme(
+  plot.title = element_text(face = "bold", hjust = 0.5)
+)
 ```
-Based on the tightly clustered observation points around the reference line, Figure 10 serves as evidence that Model 3 has the best overall fit among the models considered. Although some variability remains, particularly at higher fitted values, Model 3 provides a substantial improvement in predictive accuracy and demonstrates the importance of accounting for seasonality in egg production.
+Based on the tightly clustered observation points around the reference line, Figure 9 serves as evidence that Model 3 has the best overall fit among the models considered. Although some variability remains, particularly at higher fitted values, Model 3 provides a substantial improvement in predictive accuracy and demonstrates the importance of accounting for seasonality in egg production.
 
 ```{r, warning=FALSE, echo=TRUE}
 eggData_clean %>%
@@ -589,10 +602,13 @@ eggData_clean %>%
     title = "Average Egg Production Per Month (Model 3)",
     x = "Month",
     y = "Egg Production per 100 Layers",
-    caption = "Figure 11"
-  )
+    caption = "Figure 10"
+  ) + 
+  theme(
+  plot.title = element_text(face = "bold", hjust = 0.5)
+)
 ```
-Figure 11 demonstrates a clear seasonal pattern in egg production by month. Production is notably lowest in February, while several peak periods occur in the spring, summer, and late fall months. This pattern helps explain the improved performance of Model 3, as incorporating monthly effects captures important structure that was not accounted for in earlier models. The irregular shape of the seasonal trend further suggests that multiple environmental and biological factors contribute to variation in production.
+Figure 10 demonstrates a clear seasonal pattern in egg production by month. Production is notably lowest in February, while several peak periods occur in the spring, summer, and late fall months. This pattern helps explain the improved performance of Model 3, as incorporating monthly effects captures important structure that was not accounted for in earlier models. The irregular shape of the seasonal trend further suggests that multiple environmental and biological factors contribute to variation in production.
 
 
 ------------------------------------------------------------------------
@@ -608,10 +624,13 @@ ggplot(re_state, aes(x = reorder(state, `(Intercept)`), y = `(Intercept)`)) +
     title = "State-Level Random Intercepts",
     x = "State",
     y = "Deviation from Overall Mean",
-    caption = "Figure 12")
+    caption = "Figure 11") + 
+  theme(
+  plot.title = element_text(face = "bold", hjust = 0.5)
+)
 ```
 
-Figure 12 represents each state’s deviation from the overall mean egg
+Figure 11 represents each state’s deviation from the overall mean egg
 production. States with positive values exhibit higher baseline
 productivity, while those with negative values fall below the overall
 average. The wide spread of values indicates substantial variability in egg production across states and highlights the importance of including state-level random effects in the model.
