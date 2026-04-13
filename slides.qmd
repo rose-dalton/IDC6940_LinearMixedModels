@@ -6,7 +6,8 @@ date: '`r Sys.Date()`'
 format:
   revealjs:
     theme:
-      - custom.scss
+      - sky
+      - custom2.scss
 course: Capstone Projects in Data Science
 bibliography: references.bib # file contains bibtex for references
 #always_allow_html: true # this allows to get PDF with HTML features
@@ -187,7 +188,7 @@ scatter + geom_point(color = "#008080", alpha = 0.25) +
 
 ## Data Exploration and Visualization {.smaller}
 
-```{r, warning=FALSE, echo=TRUE}
+```{r, warning=FALSE, echo=FALSE}
 
 # feed scatterplot
 scatter2 = eggData_clean %>% ggplot(mapping = aes(x=feedPrice, y=eggsPer100Layers))
@@ -358,7 +359,7 @@ ggplot(re_state, aes(x = reorder(state, `(Intercept)`), y = `(Intercept)`)) +
   - Long-term industry improvements
   - State-level differences
 
-*Mixed models provide a powerful framework for capturing these dynamics.*
+**Mixed models provide a powerful framework for capturing these dynamics.**
 
 ## Future Efforts
 
