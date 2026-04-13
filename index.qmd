@@ -642,17 +642,9 @@ Among the fixed effects, feed price exhibited a strong positive association with
 
 In addition to these effects, substantial variability across states was observed, with state-level random intercepts indicating large differences in baseline production levels. These persistent differences suggest that unobserved structural factors, such as management practices, production systems, and regional conditions, play a significant role in shaping productivity outcomes.
 
-Overall, the results demonstrate that egg production is driven by a combination of strong seasonal patterns, broader economic and environmental influences, and considerable state-level heterogeneity. The progression from simpler to more comprehensive models highlights the importance of properly accounting for seasonality and hierarchical structure in the data. These findings suggest that while national trends provide useful context, effective strategies to improve productivity should account for both seasonal dynamics and region-specific conditions.
+Overall, the results demonstrate that egg production is driven by a combination of strong seasonal patterns, broader economic and environmental influences, and considerable state-level heterogeneity. The progression from simpler to more comprehensive models highlights the importance of properly accounting for seasonality and hierarchical structure in the data. These findings suggest that while national trends provide useful context, effective strategies to improve productivity should account for both seasonal dynamics and region-specific conditions.[^1]
 
-## References
+# References
 
-@meteyard2020best @brown2021introduction @zhou2022using
-@adhikari2016comparing @ryoo2011model @schielzeth2020robustness
-@huitema2025fisher @henderson1953variance @NOAA_ClimateAtAGlance_2026
-@USDA_ChickensAndEggs_2026 @USDA_AgriculturalPrices_2026
-@Kim2024_HeatStress_LayingHens @Ao2007_MixedModels_HBS
-@Mustafa2023_FixedRandomEffects_Medium @sarafian2020lmm
-@incredibleegg2013
-
-ChatGPT-5.2 used to fine tune writing, extract data from original
+[^1]: ChatGPT-5.2 used to fine tune writing, extract data from original
 sources, and develop effective code.

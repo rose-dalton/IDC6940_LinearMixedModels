@@ -2,9 +2,11 @@
 title: "U.S. Egg Production Analysis Using Linear Mixed Models"
 subtitle: "An Exploration Across States and Months"
 author: "Rose Dalton (Advisor: Dr. Cohen)"
-date: '2026'
+date: '`r Sys.Date()`'
 format:
-  revealjs
+  revealjs:
+    theme:
+      - custom.scss
 course: Capstone Projects in Data Science
 bibliography: references.bib # file contains bibtex for references
 #always_allow_html: true # this allows to get PDF with HTML features
@@ -17,101 +19,353 @@ editor:
     wrap: 72
 ---
 
-::: callout-important
-**Remember:** Your goal is to make your audience understand and care
-about your findings. By crafting a compelling story, you can effectively
-communicate the value of your data science project.
+## Motivation
 
-Carefully read this template since it has instructions and tips to
-writing!
+**Why Study Egg Production?**
 
-More information about `revealjs`:
-<https://quarto.org/docs/reference/formats/presentations/revealjs.html>
-:::
+- Productivity varies across:
+  - Time
+  - Season
+  - State
+  
+- Traditional models assume independence
 
-## Introduction  {.smaller}
+- Data are hierarchical + repeated
 
--   Develop a storyline that captures attention and maintains interest.
+**Goal:** Identify key drivers of productivity
 
--   Your audience is your peers
+## Why Linear Mixed Models?
 
--   Clearly state the problem or question you're addressing.
+**Nature of the Data**
 
--   Introduce why it is relevant needs.
+- Observations nested within states
+- Repeated measurements over time
 
--   Provide an overview of your approach.
+**Mixed model allows:**
 
-In kernel estimator, weight function is known as kernel function
-[@efr2008]. Cite this paper [@bro2014principal]. The GEE [@wang2014].
-The PCA [@daffertshofer2004pca]\*
-
-## Methods
-
--   Detail the models or algorithms used.
-
--   Justify your choices based on the problem and data.
-
-
+- Fixed effects → global trends
+- Random effects → state variation
 
 ## Data Exploration and Visualization
 
--   Describe your data sources and collection process.
+**Dataset**
 
--   Present initial findings and insights through visualizations.
+- 25 U.S. states
+- Monthly data (2000–2024)
+- 7,491 observations
 
--   Highlight unexpected patterns or anomalies.
+**Variables:**
+
+- Eggs per 100 layers
+- Temperature: monthly average by state
+- Feed price: USD/bushel
+- Month, Year
+
+
+## Model Strategy
+
+**Three-Model Approach**
+
+- Model 1:
+
+  - Temperature + Feed Price
+
+- Model 2:
+
+  - Long-term trend (Year)
+
+- Model 3:
+
+  - Seasonality (Month)
+
+- All models include:
+
+  - Random intercept (State)
+
+## Model Framework
+
+**Linear Mixed Model**
+$$
+\mathbf{y} = X\boldsymbol{\beta} + Z\boldsymbol{\gamma} + \mathbf{e}
+$$
+
+- Fixed effects: temperature, feed, time, season
+
+- Random effects: state
+
+- Residual: unexplained variation
 
 ## Data Exploration and Visualization {.smaller}
-
-A study was conducted to determine how...
 
 ```{r, warning=FALSE, echo=F, message=FALSE}
 # loading packages 
 library(tidyverse)
-library(knitr)
 library(ggthemes)
-library(ggrepel)
-library(dslabs)
+library(lme4)
+library(lmerTest)
+library(tidyverse)
+library(broom.mixed)
+library(gtsummary)
+library(ggeffects)
 ```
 
 ```{r, warning=FALSE, echo=F}
-# Load Data
-#kable(head(murders))
+# load data
+eggData <- read.csv("USDA_Egg_Data.csv")
 
-ggplot1 = murders %>% ggplot(mapping = aes(x=population/10^6, y=total)) 
+# clean data for visuals
+eggData_clean <- eggData %>%
+  select(date, state, eggsPer100Layers, avgTemp, feedPrice) %>%
+  mutate(
+    state = str_trim(state),                         
+    eggsPer100Layers = as.numeric(eggsPer100Layers), 
+    avgTemp = as.numeric(avgTemp),
+    Date = as.Date(paste0(date, "-01")),             
+    Year = year(Date),                              
+    Month = month(Date)
+  ) 
 
-  ggplot1 + geom_point(aes(col=region), size = 4) +
-  geom_text_repel(aes(label=abb)) +
-  scale_x_log10() +
-  scale_y_log10() +
-  geom_smooth(formula = "y~x", method=lm,se = F)+
-  xlab("Populations in millions (log10 scale)") + 
-  ylab("Total number of murders (log10 scale)") +
-  ggtitle("US Gun Murders in 2010") +
-  scale_color_discrete(name = "Region")+
-      theme_bw()
-  
+#time series plot
+timeSeries = eggData_clean %>% ggplot(mapping = aes(x=Date, y=eggsPer100Layers)) 
 
+timeSeries + geom_line(color = "#008080", alpha = 0.6) +
+  geom_smooth(method = "loess", se = FALSE, span = 0.25, color = "navy") +
+  facet_wrap(~ state, ncol = 5, scales = "free_y") +
+  labs(title = "Eggs per 100 Layers Over Time (2000–2024)",
+    x = "Date",
+    y = "Eggs per 100 Layers",
+    caption = "Figure 1") +
+  theme_bw() + 
+  theme(
+  plot.title = element_text(face = "bold", hjust = 0.5)
+)
+```
+→ Much state-level variation egg production
+
+## Data Exploration and Visualization {.smaller}
+
+```{r, warning=FALSE, echo=FALSE}
+# month box plot
+boxPlot = eggData_clean %>% ggplot(mapping = aes(x=factor(Month), y=eggsPer100Layers))
+
+boxPlot +
+geom_boxplot(
+  fill = "#008080",        
+  color = "navy",          
+  outlier.alpha = 0.3) +
+labs(
+  title = "Seasonality: Eggs per 100 Layers by Month",
+  x = "Month",
+  y = "Eggs per 100 Layers",
+  caption = "Figure 2") +
+  theme_bw() + 
+  theme(
+  plot.title = element_text(face = "bold", hjust = 0.5)
+)
+```
+→ Some monthly-level variation
+
+## Data Exploration and Visualization {.smaller}
+
+```{r, warning=FALSE, echo=FALSE}
+
+# temperature scatterplot
+scatter = eggData_clean %>% ggplot(mapping = aes(x=avgTemp, y=eggsPer100Layers))
+
+scatter + geom_point(color = "#008080", alpha = 0.25) +
+  geom_smooth(method = "loess", se = TRUE, span = 0.75, color = "navy") + 
+  labs(title = "Eggs per 100 Layers vs Average Temperature",
+    x = "Average Temperature (°F)",
+    y = "Eggs per 100 Layers",
+    caption = "Figure 3") +
+  theme_bw() + 
+  theme(
+  plot.title = element_text(face = "bold", hjust = 0.5)
+)
+```
+→ Warmer weather = sustained productivity, until a certain threshold
+
+## Data Exploration and Visualization {.smaller}
+
+```{r, warning=FALSE, echo=TRUE}
+
+# feed scatterplot
+scatter2 = eggData_clean %>% ggplot(mapping = aes(x=feedPrice, y=eggsPer100Layers))
+
+scatter2 + geom_point(color = "#008080", alpha = 0.25) +
+  geom_smooth(method = "loess", se = TRUE, span = 0.75, color = "navy") +
+  labs(title = "Eggs per 100 Layers vs Feed Price",
+       x = "Feed Price (USD/bushel)",
+       y = "Eggs per 100 Layers",
+    caption = "Figure 4") +
+  theme_bw() + 
+  theme(
+  plot.title = element_text(face = "bold", hjust = 0.5)
+)
+```
+→ Indicates slight positive trend
+
+## Model 1 Results
+
+```{r, warning=FALSE, echo=FALSE}
+
+#modeling temp and feed price
+egg_mod1 <- lmer(
+  eggsPer100Layers ~ avgTemp + feedPrice + (1 | state),
+  data = eggData_clean
+)
+
+tbl_regression(
+  egg_mod1,
+  conf.int = TRUE,
+  label = list(
+    avgTemp ~ "Average Temperature",
+    feedPrice ~ "Feed Price"
+  )
+) %>%
+  bold_labels() %>%
+  modify_caption("**Table 1: Linear Mixed Model Results for Temperature and Feed Price**") %>%
+  as_gt() %>%
+  gt::tab_options(
+    table.font.size = gt::px(20)
+  )
 ```
 
-## Modeling and Results
+- Both statistically significant
+- Feed price has larger effect
+- Wide uncertainty for temperature
 
--   Explain your data preprocessing and cleaning steps.
+→ Likely reflects time/economic trends, not causal
 
--   Present your key findings in a clear and concise manner.
+## Model 2 Results
 
--   Use visuals to support your claims.
+```{r, warning=FALSE, echo=FALSE}
+#modeling year
+egg_mod2 <- lmer(
+  eggsPer100Layers ~  Year + (1 | state),
+  data = eggData_clean
+)
 
--   **Tell a story about what the data reveals.**
-
-```{r}
-
+tbl_regression(
+  egg_mod2,
+  conf.int = TRUE,
+  label = list(
+    Year ~ "Year"
+  )
+) %>%
+  bold_labels() %>%
+  modify_caption("**Table 2: Linear Mixed Model Results for Year**") %>%
+  as_gt() %>%
+  gt::tab_options(
+    table.font.size = gt::px(20)
+  )
 ```
+
+- +12 eggs per year
+- Strong upward trajectory
+
+→ Likely industry efficiency improvements
+
+## Model 3 Results
+
+:::: {.columns}
+
+::: {.column width="70%"}
+
+```{r, warning=FALSE, echo=FALSE}
+eggData_clean$Month_label <- factor(
+  eggData_clean$Month,
+  levels = 1:12,
+  labels = month.abb
+)
+
+egg_mod3 <- lmer(
+  eggsPer100Layers ~ Month_label + (1 | state),
+  data = eggData_clean
+)
+
+tbl_regression(
+  egg_mod3,
+  conf.int = TRUE,
+  label = list(
+    Month_label ~ "Month"
+  )
+) %>%
+  bold_labels() %>%
+  modify_caption("**Table 3: Linear Mixed Model Results for Month**") %>%
+  as_gt() %>%
+  gt::tab_options(
+    table.font.size = gt::px(14)
+  )
+```
+
+:::
+
+::: {.column width="30%"}
+
+- Strong cyclical pattern → Seasonality explains large variation
+
+:::
+
+::::
+
+## Model Comparison
+
+**Which Model Performs Best?**
+
+- Model 1 → baseline fit
+- Model 2 → improved (captures trend)
+- Model 3 → best fit
+  - Reduced residual variability
+  - Captures cyclical structure
+
+## Random Effects
+
+```{r, warning=FALSE, echo=FALSE}
+re_state <- ranef(egg_mod1)$state
+re_state$state <- rownames(re_state)
+
+ggplot(re_state, aes(x = reorder(state, `(Intercept)`), y = `(Intercept)`)) +
+  geom_point(color = "#008080") +
+  coord_flip() +
+  labs(
+    title = "State-Level Random Intercepts",
+    x = "State",
+    y = "Deviation from Overall Mean",
+    caption = "Figure 11") + 
+  theme(
+  plot.title = element_text(face = "bold", hjust = 0.5)
+)
+```
+
+- Large spread across states
+- Persistent baseline differences
+
+→ Unobserved structural factors matter
+
+## Key Takeaways
+
+- Strong seasonal pattern (dominant driver)
+- Significant long-term growth
+- Temperature → modest effect
+- Feed price → likely confounded
+- Large state variability
 
 ## Conclusion
 
--   Summarize your key findings.
+- Egg production is driven by:
+  - Seasonal cycles
+  - Long-term industry improvements
+  - State-level differences
 
--   Discuss the implications of your results.
+*Mixed models provide a powerful framework for capturing these dynamics.*
+
+## Future Efforts
+
+- Nonlinear temperature effects
+- Random slopes by state
+- Interaction terms
+- Forecasting models
+
 
 ## References
