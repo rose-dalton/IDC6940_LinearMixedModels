@@ -20,34 +20,38 @@ editor:
     wrap: 72
 ---
 
-## Motivation
+## Introduction
 
-**Why Study Egg Production?**
+<div style="font-size: 0.8em;">
 
-- Productivity varies across:
-  - Time
-  - Season
-  - State
+- Egg production varies across time, season, and geography
+- Traditional models (ANOVA, regression) assume independence
+- This dataset contains:
+  - Repeated monthly observations
+  - Nested structure (months within states)
+
+➡️ Linear Mixed Models (LMMs) are appropriate
+
+</div>
+
+## Research Objective
+
+<div style="font-size: 0.8em;">
+
+- Identify key drivers of egg production:
+  - Environmental (temperature)
+  - Economic (feed price)
+  - Temporal (year, month)
+- Evaluate:
+  - Long-term trends
+  - Seasonal patterns
+  - State-level variation
   
-- Traditional models assume independence
+</div>
 
-- Data are hierarchical + repeated
+## Data Overview
 
-**Goal:** Identify key drivers of productivity
-
-## Why Linear Mixed Models?
-
-**Nature of the Data**
-
-- Observations nested within states
-- Repeated measurements over time
-
-**Mixed model allows:**
-
-- Fixed effects → global trends
-- Random effects → state variation
-
-## Data Exploration and Visualization
+<div style="font-size: 0.8em;">
 
 **Dataset**
 
@@ -57,49 +61,54 @@ editor:
 
 **Variables:**
 
-- Eggs per 100 layers
-- Temperature: monthly average by state
-- Feed price: USD/bushel
-- Month, Year
+- Response: 
+  - Eggs per 100 layers
+-Predictors:
+  - Temperature: monthly average by state
+  - Feed price: USD/bushel
+  - Month, Year
 
+</div>
 
-## Model Strategy
+## Why Mixed Models?
 
-**Three-Model Approach**
+<div style="font-size: 0.8em;">
 
-- Model 1:
+- Observations are **not independent**
+- States differ in baseline production
 
-  - Temperature + Feed Price
-
-- Model 2:
-
-  - Long-term trend (Year)
-
-- Model 3:
-
-  - Seasonality (Month)
-
-- All models include:
-
-  - Random intercept (State)
-
-## Model Framework
-
-**Linear Mixed Model**
+Model structure:
 $$
 \mathbf{y} = X\boldsymbol{\beta} + Z\boldsymbol{\gamma} + \mathbf{e}
 $$
 
-- Fixed effects: temperature, feed, time, season
+- Fixed effects ($\boldsymbol{\beta}$): temperature, feed, time, season
 
-- Random effects: state
+- Random effects ($\boldsymbol{\gamma}$): state
 
-- Residual: unexplained variation
+- Residual (**e**): unexplained variation
 
-## Data Exploration and Visualization {.smaller}
+</div>
 
-```{r, warning=FALSE, echo=F, message=FALSE}
-# loading packages 
+## Model Specification
+
+
+<div style="font-size: 0.8em;">
+
+**Four-Model Approach**
+
+- **Model 1**: Temperature + Feed Price
+- **Model 2**: Long-term trend (Year)
+- **Model 3**: Seasonality (Month)
+- **Model 4**: Combined model
+- All models include: random intercept (State)
+
+</div>
+
+## Exploratory Findings
+
+```{r, warning=FALSE, echo=FALSE, message=FALSE}
+# loading packages
 library(tidyverse)
 library(ggthemes)
 library(lme4)
@@ -108,23 +117,24 @@ library(tidyverse)
 library(broom.mixed)
 library(gtsummary)
 library(ggeffects)
+library(gt)
 ```
 
-```{r, warning=FALSE, echo=F}
+```{r, warning=FALSE, echo=FALSE}
 # load data
 eggData <- read.csv("USDA_Egg_Data.csv")
 
 # clean data for visuals
 eggData_clean <- eggData %>%
-  select(date, state, eggsPer100Layers, avgTemp, feedPrice) %>%
+  dplyr::select(date, state, eggsPer100Layers, avgTemp, feedPrice) %>%
   mutate(
-    state = str_trim(state),                         
+    state = stringr::str_trim(state),                         
     eggsPer100Layers = as.numeric(eggsPer100Layers), 
     avgTemp = as.numeric(avgTemp),
     Date = as.Date(paste0(date, "-01")),             
-    Year = year(Date),                              
-    Month = month(Date)
-  ) 
+    Year = lubridate::year(Date),                              
+    Month = lubridate::month(Date)
+  )
 
 #time series plot
 timeSeries = eggData_clean %>% ggplot(mapping = aes(x=Date, y=eggsPer100Layers)) 
@@ -141,9 +151,15 @@ timeSeries + geom_line(color = "#008080", alpha = 0.6) +
   plot.title = element_text(face = "bold", hjust = 0.5)
 )
 ```
-→ Much state-level variation egg production
 
-## Data Exploration and Visualization {.smaller}
+<div style="font-size: 0.8em;">
+
+- General upward trend over time
+- Variation across states
+
+</div>
+
+## Exploratory Findings
 
 ```{r, warning=FALSE, echo=FALSE}
 # month box plot
@@ -164,9 +180,10 @@ labs(
   plot.title = element_text(face = "bold", hjust = 0.5)
 )
 ```
-→ Some monthly-level variation
 
-## Data Exploration and Visualization {.smaller}
+- Production disparities across months
+
+## Exploratory Findings
 
 ```{r, warning=FALSE, echo=FALSE}
 
@@ -184,9 +201,10 @@ scatter + geom_point(color = "#008080", alpha = 0.25) +
   plot.title = element_text(face = "bold", hjust = 0.5)
 )
 ```
-→ Warmer weather = sustained productivity, until a certain threshold
 
-## Data Exploration and Visualization {.smaller}
+- Temperature shows nonlinear behavior at extremes
+
+## Exploratory Findings
 
 ```{r, warning=FALSE, echo=FALSE}
 
@@ -204,7 +222,8 @@ scatter2 + geom_point(color = "#008080", alpha = 0.25) +
   plot.title = element_text(face = "bold", hjust = 0.5)
 )
 ```
-→ Indicates slight positive trend
+
+- Slight positive trend in feed price vs productivity
 
 ## Model 1 Results
 
@@ -232,11 +251,16 @@ tbl_regression(
   )
 ```
 
-- Both statistically significant
-- Feed price has larger effect
-- Wide uncertainty for temperature
+<div style="font-size: 0.8em;">
 
-→ Likely reflects time/economic trends, not causal
+- Temperature: small positive effect
+- Feed price: strong positive effect
+
+→ Large unexplained variability
+
+→ No time or seasonal structure
+
+</div>
 
 ## Model 2 Results
 
@@ -262,10 +286,16 @@ tbl_regression(
   )
 ```
 
-- +12 eggs per year
-- Strong upward trajectory
+<div style="font-size: 0.8em;">
 
-→ Likely industry efficiency improvements
+- Year is highly significant
+- +12 eggs per year
+
+→ Captures long-term improvement
+
+→ Misses seasonal variation
+
+</div>
 
 ## Model 3 Results
 
@@ -304,21 +334,269 @@ tbl_regression(
 
 ::: {.column width="30%"}
 
-- Strong cyclical pattern → Seasonality explains large variation
+<div style="font-size: 0.8em;">
+
+- Significant monthly effects
+- February lowest production, peaks in summer and winter
+
+→ Captures seasonal cycles
+
+→ Still missing long-term + external factors
+
+</div>
 
 :::
 
 ::::
 
-## Model Comparison
+## Model 4 Results
 
-**Which Model Performs Best?**
+:::: {.columns}
 
-- Model 1 → baseline fit
-- Model 2 → improved (captures trend)
-- Model 3 → best fit
-  - Reduced residual variability
-  - Captures cyclical structure
+::: {.column width="70%"}
+
+
+```{r, warning=FALSE, echo=FALSE}
+# combined model
+egg_mod4 <- lmer(
+  eggsPer100Layers ~ avgTemp + feedPrice + Year + Month_label + (1 | state),
+  data = eggData_clean
+)
+
+tbl_regression(
+  egg_mod4,
+  conf.int = TRUE,
+  label = list(
+    avgTemp ~ "Average Temperature",
+    feedPrice ~ "Feed Price",
+    Year ~ "Year",
+    Month_label ~ "Month"
+  )
+) %>%
+  bold_labels() %>%
+  modify_caption("**Table 4: Linear Mixed Model Results for Combined Model**") %>%
+  as_gt() %>%
+  gt::tab_options(
+    data_row.padding = gt::px(3),   # ↓ reduce row height
+    table.font.size = gt::px(18)    # ↓ slightly smaller text
+  )
+```
+
+:::
+
+::: {.column width="30%"}
+
+<div style="font-size: 0.8em;">
+
+- Includes:
+  - Temperature
+  - Feed price
+  - Year
+  - Month
+
+→ Most complete representation of production dynamics
+
+</div>
+
+:::
+
+::::
+
+## Model Comparison (AIC)
+
+```{r, warning=FALSE, echo=FALSE}
+aic_results <- AIC(egg_mod1, egg_mod2, egg_mod3, egg_mod4) %>%
+  as.data.frame() %>%
+  tibble::rownames_to_column("Model") %>%
+  arrange(AIC)
+aic_results %>%
+  gt() %>%
+  tab_header(
+    title = "Model Comparison Using AIC"
+  )
+```
+
+<div style="font-size: 0.8em;">
+
+- Model 4: Lowest AIC (best fit)
+- Large improvement over all other models
+
+→ Strong evidence for combined model superiority
+
+</div>
+
+## Model 1 Fit: Observed vs Fitted
+
+```{r, warning=FALSE, echo=FALSE}
+model1_data <- model.frame(egg_mod1)
+
+model1_data$fitted <- fitted(egg_mod1)
+
+ggplot(model1_data, aes(x = fitted, y = eggsPer100Layers)) +
+  geom_point(color = "#008080", alpha = 0.3) +
+  geom_abline(slope = 1, intercept = 0, color = "navy") +
+  labs(
+    title = "Observed vs Fitted Values (Model 1)",
+    x = "Fitted Values",
+    y = "Observed Eggs per 100 Layers",
+    caption = "Figure 5"
+  ) +
+  theme_minimal() + 
+  theme(
+  plot.title = element_text(face = "bold", hjust = 0.5)
+)
+```
+
+## Model 2 Fit: Observed vs Fitted
+
+```{r, warning=FALSE, echo=FALSE}
+model2_data <- model.frame(egg_mod2)
+
+model2_data$fitted <- fitted(egg_mod2)
+
+ggplot(model2_data, aes(x = fitted, y = eggsPer100Layers)) +
+  geom_point(color = "#008080", alpha = 0.3) +
+  geom_abline(slope = 1, intercept = 0, color = "navy") +
+  labs(
+    title = "Observed vs Fitted Values (Model 2)",
+    x = "Fitted Values",
+    y = "Observed Eggs per 100 Layers",
+    caption = "Figure 9"
+  ) +
+  theme_bw() + 
+  theme(
+  plot.title = element_text(face = "bold", hjust = 0.5)
+)
+```
+
+## Model 3 Fit: Observed vs Fitted
+
+```{r, warning=FALSE, echo=FALSE}
+model3_data <- model.frame(egg_mod3)
+
+model3_data$fitted <- fitted(egg_mod3)
+
+ggplot(model3_data, aes(x = fitted, y = eggsPer100Layers)) +
+  geom_point(color = "#008080", alpha = 0.3) +
+  geom_abline(slope = 1, intercept = 0, color = "navy") +
+  labs(
+    title = "Observed vs Fitted Values (Model 3)",
+    x = "Fitted Values",
+    y = "Observed Eggs per 100 Layers",
+    caption = "Figure 11"
+  ) +
+  theme_bw() + 
+  theme(
+  plot.title = element_text(face = "bold", hjust = 0.5)
+)
+```
+
+## Model 4 Fit: Observed vs Fitted
+
+```{r, warning=FALSE, echo=FALSE}
+full_model_data <- model.frame(egg_mod4)
+
+full_model_data$observed <- model.response(full_model_data)
+full_model_data$fitted <- fitted(egg_mod4)
+
+ggplot(full_model_data, aes(x = fitted, y = observed)) +
+  geom_point(color = "#008080", alpha = 0.25) +
+  geom_abline(slope = 1, intercept = 0, color = "navy", linewidth = 1) +
+  labs(
+    title = "Observed vs Fitted Values (Combined Model)",
+    x = "Fitted Values",
+    y = "Observed Eggs per 100 Layers",
+    caption = "Figure 14"
+  ) +
+  theme_minimal()
+```
+
+<div style="font-size: 0.8em;">
+
+- Tight clustering around reference line
+- Improved predictive accuracy
+
+→ Model 4 explains substantially more variability
+
+</div>
+
+## Model 1 Fit: Residuals vs Fitted
+
+```{r, warning=FALSE, echo=FALSE}
+model1_data$residuals <- resid(egg_mod1)
+
+ggplot(model1_data, aes(x = fitted, y = residuals)) +
+  geom_point(color = "#008080", alpha = 0.25) +
+  geom_hline(yintercept = 0, color = "navy", linewidth = 1) +
+  labs(
+    title = "Residuals vs Fitted Values (Model 1)",
+    x = "Fitted Values",
+    y = "Residuals",
+    caption = "Figure 6"
+  ) +
+  theme_minimal()
+```
+
+## Model 2 Fit: Residuals vs Fitted
+
+```{r, warning=FALSE, echo=FALSE}
+model2_data$residuals <- resid(egg_mod2)
+
+ggplot(model2_data, aes(x = fitted, y = residuals)) +
+  geom_point(color = "#008080", alpha = 0.25) +
+  geom_hline(yintercept = 0, color = "navy", linewidth = 1) +
+  labs(
+    title = "Residuals vs Fitted Values (Model 2)",
+    x = "Fitted Values",
+    y = "Residuals",
+    caption = "Figure 10"
+  ) +
+  theme_minimal()
+```
+
+## Model 3 Fit: Residuals vs Fitted
+
+```{r, warning=FALSE, echo=FALSE}
+model3_data$residuals <- resid(egg_mod3)
+
+ggplot(model3_data, aes(x = fitted, y = residuals)) +
+  geom_point(color = "#008080", alpha = 0.25) +
+  geom_hline(yintercept = 0, color = "navy", linewidth = 1) +
+  labs(
+    title = "Residuals vs Fitted Values (Model 3)",
+    x = "Fitted Values",
+    y = "Residuals",
+    caption = "Figure 12"
+  ) +
+  theme_minimal()
+```
+
+## Model 4 Fit: Residuals vs Fitted
+
+```{r, warning=FALSE, echo=FALSE}
+full_model_data$residuals <- resid(egg_mod4)
+
+ggplot(full_model_data, aes(x = fitted, y = residuals)) +
+  geom_point(color = "#008080", alpha = 0.25) +
+  geom_hline(yintercept = 0, color = "navy", linewidth = 1) +
+  labs(
+    title = "Residuals vs Fitted Values (Combined Model)",
+    x = "Fitted Values",
+    y = "Residuals",
+    caption = "Figure 15"
+  ) +
+  theme_minimal()
+```
+
+<div style="font-size: 0.8em;">
+
+- Residuals centered around zero
+- Reduced heteroskedasticity
+- No strong nonlinear patterns
+
+→ Model assumptions reasonably satisfied
+
+</div>
 
 ## Random Effects
 
@@ -339,34 +617,79 @@ ggplot(re_state, aes(x = reorder(state, `(Intercept)`), y = `(Intercept)`)) +
 )
 ```
 
+<div style="font-size: 0.8em;">
+
 - Large spread across states
 - Persistent baseline differences
 
 → Unobserved structural factors matter
 
-## Key Takeaways
+</div>
 
-- Strong seasonal pattern (dominant driver)
-- Significant long-term growth
-- Temperature → modest effect
-- Feed price → likely confounded
-- Large state variability
+## Key Findings
+
+
+<div style="font-size: 0.8em;">
+
+- Year is the strongest driver
+- Seasonality plays a major role
+- Temperature has a modest effect
+- Feed price effect weakens when controlling for time
+
+</div>
+
+## Interpretation
+
+
+<div style="font-size: 0.8em;">
+
+- Production improvements driven by:
+  - Technology
+  - Efficiency gains
+- Seasonal fluctuations:
+  - Biological cycles
+  - Environmental conditions
+- State differences:
+  - Management practices
+  - Regional conditions
+
+</div>
+
+## Limitations
+
+<div style="font-size: 0.8em;">
+
+- Linear assumption may miss nonlinear effects
+- No explicit modeling of:
+  - Farm practices
+  - Breed differences
+- Some heteroskedasticity remains
+
+</div>
 
 ## Conclusion
+
+<div style="font-size: 0.8em;">
 
 - Egg production is driven by:
   - Seasonal cycles
   - Long-term industry improvements
   - State-level differences
-
-**Mixed models provide a powerful framework for capturing these dynamics.**
-
-## Future Efforts
-
-- Nonlinear temperature effects
-- Random slopes by state
-- Interaction terms
-- Forecasting models
+  
+→ Best model must account for all three
 
 
-## References
+</div>
+
+**→ Mixed models provide a powerful framework for capturing these dynamics.**
+
+## Takeaways
+
+<div style="font-size: 0.8em;">
+
+- Ignoring seasonality → poor model fit
+- Ignoring time → misleading relationships
+- Combined modeling → strongest results
+
+</div>
+

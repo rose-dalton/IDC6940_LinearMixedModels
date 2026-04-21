@@ -177,7 +177,7 @@ $$
 
 -   $\mathbf{e}$: residual error vector
 
-------------------------------------------------------------------------
+---
 
 The residual error term satisfies:
 
@@ -189,7 +189,7 @@ $$
 
 -   ${R}$: variance
 
-------------------------------------------------------------------------
+---
 
 The random effects vector satisfies:
 
@@ -201,7 +201,7 @@ $$
 
 -   ${G}$: variance-covariance matrix
 
-------------------------------------------------------------------------
+---
 
 Additionally, the residual errors and random effects are assumed
 uncorrelated(@Ao2007_MixedModels_HBS):
@@ -236,7 +236,10 @@ Administration’s Climate at a Glance National Time Series archive
 # loading packages
 library(tidyverse)
 library(ggthemes)
-
+library(dplyr)
+library(stringr)
+library(lubridate)
+library(gt)
 ```
 
 ```{r, warning=FALSE, echo=TRUE}
@@ -245,15 +248,15 @@ eggData <- read.csv("USDA_Egg_Data.csv")
 
 # clean data for visuals
 eggData_clean <- eggData %>%
-  select(date, state, eggsPer100Layers, avgTemp, feedPrice) %>%
+  dplyr::select(date, state, eggsPer100Layers, avgTemp, feedPrice) %>%
   mutate(
-    state = str_trim(state),                         
+    state = stringr::str_trim(state),                         
     eggsPer100Layers = as.numeric(eggsPer100Layers), 
     avgTemp = as.numeric(avgTemp),
     Date = as.Date(paste0(date, "-01")),             
-    Year = year(Date),                              
-    Month = month(Date)
-  ) 
+    Year = lubridate::year(Date),                              
+    Month = lubridate::month(Date)
+  )
 
 #time series plot
 timeSeries = eggData_clean %>% ggplot(mapping = aes(x=Date, y=eggsPer100Layers)) 
@@ -354,7 +357,7 @@ complexity. Accordingly, a random-intercept model was utilized to
 capture between-state variability while maintaining model stability and
 facilitating clear interpretation of fixed effects.
 
-------------------------------------------------------------------------
+---
 
 <div style="text-align: center;">
 **Model 1**
@@ -398,7 +401,19 @@ b_{0} \text{betweenStateEffects}
 +
 \varepsilon \text{withinStateEffects}
 $$ 
-Model 1 examines egg production as a function of average monthly temperature and feed price, capturing key environmental and economic influences on productivity. Model 2 focuses on long-term trends, modeling changes in egg production from 2000 to 2024. Model 3 evaluates seasonal patterns by incorporating month as a categorical predictor, allowing for the identification of recurring fluctuations in productivity throughout the year. In all models, a random intercept for state is included to account for differences in baseline egg production across states. The residual error term represents within-state variation not explained by the included predictors or random effects.
+
+<div style="text-align: center;">
+**Model 4**
+</div>
+
+$$
+y = \beta_0 + \beta_1 \text{avgTemp} + \beta_2 \text{feedPrice} + \beta_3 \text{Year}
++ \sum_{m=2}^{12} \beta_{4} \text{Month}
++ b_0 \text{betweenStateEffects} + \varepsilon \text{withinStateEffects}
+$$
+
+Model 1 examines egg production as a function of average monthly temperature and feed price, capturing key environmental and economic influences on productivity. Model 2 focuses on long-term trends, modeling changes in egg production from 2000 to 2024. Model 3 evaluates seasonal patterns by incorporating month as a categorical predictor, allowing for the identification of recurring fluctuations in productivity throughout the year. The combined model integrates all of these components, jointly modeling environmental, economic, temporal, and seasonal effects to provide a more comprehensive representation of egg production dynamics. In all models, a random intercept for state is included to account for differences in baseline egg production across states. The residual error term represents within-state variation not explained by the included predictors or random effects.
+
 
 ```{r, warning=FALSE, echo=TRUE}
 library(lme4)
@@ -414,7 +429,6 @@ eggData_clean$Month_label <- factor(
   )
 
 ```
-
 
 ```{r, warning=FALSE, echo=TRUE}
 
@@ -471,15 +485,38 @@ tbl_regression(
   modify_caption("**Table 3: Linear Mixed Model Results for Month**")
 ```
 
-------------------------------------------------------------------------
+```{r}
+# combined model
+egg_mod4 <- lmer(
+  eggsPer100Layers ~ avgTemp + feedPrice + Year + Month_label + (1 | state),
+  data = eggData_clean
+)
 
-The results from the mixed-effects models highlight several key factors influencing egg production. In Model 1, both average temperature and feed price were found to be statistically significant predictors of egg production, with feed price exhibiting a substantially larger effect size. This suggests that economic conditions may reflect broader temporal or market trends rather than a direct causal mechanism.
+tbl_regression(
+  egg_mod4,
+  conf.int = TRUE,
+  label = list(
+    avgTemp ~ "Average Temperature",
+    feedPrice ~ "Feed Price",
+    Year ~ "Year",
+    Month_label ~ "Month"
+  )
+) %>%
+  bold_labels() %>%
+  modify_caption("**Table 4: Linear Mixed Model Results for Combined Model**")
+```
 
-Model 2 revealed a strong, positive temporal trend, with egg production increasing by approximately 12 eggs per 100 layers per year. This may be indicative of substantial improvements in production efficiency over the study period.
+---
 
-Model 3 demonstrated clear seasonal variation in egg production, with several months showing significant deviations from the reference month. Notably, production tends to decline in late winter and early spring and increase in late summer and winter months, reflecting recurring cyclical patterns in productivity.
+The results from the mixed-effects models highlight several key factors influencing egg production. In Model 1, both average temperature and feed price were statistically significant predictors, with feed price showing a larger effect. However, this relationship likely reflects broader market trends rather than a direct causal effect.
 
-All in all, these findings indicate that egg production is driven by a combination of long-term industry improvements, seasonal fluctuations, and external environmental and economic factors.
+Model 2 showed a strong upward trend over time, with egg production increasing by about 12 eggs per 100 layers per year. This suggests meaningful improvements in production efficiency over the study period.
+
+Model 3 revealed clear seasonal patterns. Several months differed significantly from the reference month, with production generally lower in late winter and early spring, and higher in late summer and winter. This indicates consistent seasonal fluctuations in egg production.
+
+The combined model, which includes temperature, feed price, year, and month together, provides a more complete picture. After accounting for both long-term trends and seasonal patterns, the effect of feed price becomes much smaller, suggesting that its earlier importance was partly due to its relationship with time. In contrast, temperature remains statistically significant, though its effect is relatively small. The positive effect of year remains strong, confirming ongoing improvements in production over time. Seasonal effects also remain important, with February, April, June, and September showing lower production than January, and October and December showing higher production.
+
+Overall, these results suggest that egg production is mainly driven by long-term improvements and seasonal patterns. Environmental factors play a smaller role, while economic variables appear to reflect broader trends rather than direct causal effects.
 
 ```{r, warning=FALSE, echo=TRUE}
 model1_data <- model.frame(egg_mod1)
@@ -502,6 +539,22 @@ ggplot(model1_data, aes(x = fitted, y = eggsPer100Layers)) +
 ```
 Figure 5 indicates that Model 1 reasonably captures the overall linear trend in egg production, as evidenced by the alignment of points along the red reference line. However, there is considerable cloud of observation points around the line, suggesting that much variability remains unexplained. From this, it can be deduced that while the model provides a baseline fit, further refinement, such as incorporating seasonal effects, may improve prediction accuracy.
 
+```{r}
+model1_data$residuals <- resid(egg_mod1)
+
+ggplot(model1_data, aes(x = fitted, y = residuals)) +
+  geom_point(color = "#008080", alpha = 0.25) +
+  geom_hline(yintercept = 0, color = "navy", linewidth = 1) +
+  labs(
+    title = "Residuals vs Fitted Values (Model 1)",
+    x = "Fitted Values",
+    y = "Residuals",
+    caption = "Figure 6"
+  ) +
+  theme_minimal()
+```
+The increasing spread of residuals at higher fitted values suggests that Model 1 fails to capture important variation in egg production. In particular, the omission of year and monthly effects likely contributes to this pattern, as these factors account for much of the variability in productivity.
+
 ```{r, warning=FALSE, echo=TRUE}
 library(ggeffects)
 
@@ -517,7 +570,7 @@ ggplot(predictTemp, aes(x = x, y = predicted)) +
     title = "Effect of Temperature on Egg Production (Model 1)",
     x = "Average Monthly Temperature (°F)",
     y = "Predicted Eggs per 100 Layers",
-    caption = "Figure 6"
+    caption = "Figure 7"
   ) +
   theme_bw() + 
   theme(
@@ -533,7 +586,7 @@ ggplot(predictFeed, aes(x = x, y = predicted)) +
     title = "Effect of Feed Price on Egg Production (Model 1)",
     x = "Feed Price (USD/bushel)",
     y = "Predicted Eggs per 100 Layers",
-    caption = "Figure 7"
+    caption = "Figure 8"
   ) +
   theme_bw() + 
   theme(
@@ -545,7 +598,7 @@ Figure 6 exhibits a positive association between temperature and egg production,
 
 Figure 7 also estimates a positive relationship, in which, predicted egg productivity increases as feed price rises. The magnitude of the feed price effect appears substantially larger than that of temperature, suggesting it plays a more prominent role in explaining variation within this model. The confidence interval is more narrow than the temperature estimate but still demonstrates moderate uncertainty, especially at higher feed prices. 
 
-------------------------------------------------------------------------
+---
 
 ```{r, warning=FALSE, echo=TRUE}
 model2_data <- model.frame(egg_mod2)
@@ -559,7 +612,7 @@ ggplot(model2_data, aes(x = fitted, y = eggsPer100Layers)) +
     title = "Observed vs Fitted Values (Model 2)",
     x = "Fitted Values",
     y = "Observed Eggs per 100 Layers",
-    caption = "Figure 8"
+    caption = "Figure 9"
   ) +
   theme_bw() + 
   theme(
@@ -568,6 +621,21 @@ ggplot(model2_data, aes(x = fitted, y = eggsPer100Layers)) +
 ```
 Figure 8 shows that Model 2 has a stronger alignment along the reference line compared to Model 1. This is indicative of improved model fit and predictive accuracy. The dispersion cloud of points around the line is reduced, suggesting that the model captures a greater proportion of variability in egg production. This suggests that year is a strong predictor of long-term changes in productivity.
 
+```{r}
+model2_data$residuals <- resid(egg_mod2)
+
+ggplot(model2_data, aes(x = fitted, y = residuals)) +
+  geom_point(color = "#008080", alpha = 0.25) +
+  geom_hline(yintercept = 0, color = "navy", linewidth = 1) +
+  labs(
+    title = "Residuals vs Fitted Values (Model 2)",
+    x = "Fitted Values",
+    y = "Residuals",
+    caption = "Figure 10"
+  ) +
+  theme_minimal()
+```
+The residuals vs fitted plot for Model 2 shows slight improvement over Model 1. The residuals are more evenly distributed around zero and have a slightly less funnel-like structure. This suggests that including year as a predictor successfully captures long-term trends in egg production.
 
 ```{r, warning=FALSE, echo=TRUE}
 model3_data <- model.frame(egg_mod3)
@@ -581,14 +649,30 @@ ggplot(model3_data, aes(x = fitted, y = eggsPer100Layers)) +
     title = "Observed vs Fitted Values (Model 3)",
     x = "Fitted Values",
     y = "Observed Eggs per 100 Layers",
-    caption = "Figure 9"
+    caption = "Figure 11"
   ) +
   theme_bw() + 
   theme(
   plot.title = element_text(face = "bold", hjust = 0.5)
 )
 ```
-Based on the tightly clustered observation points around the reference line, Figure 9 serves as evidence that Model 3 has the best overall fit among the models considered. Model 2 captures long-term growth but fails to account for seasonal variation, while Model 1 omits both chronological and seasonal structure. Model 3 improves fit by incorporating systematic monthly variation, which explains a substantial portion of previously unexplained variance. Although some variability remains, particularly at higher fitted values, Model 3 provides a substantial improvement in predictive accuracy and demonstrates the importance of accounting for seasonality in egg production.
+Based on the clustered observation points around the reference line, Figure 9 demonstrates that Model 3 exhibits reasonable performance compared to earlier models. Model 2 captures long-term growth but fails to account for seasonal variation, while Model 1 omits both chronological and seasonal structure. By incorporating monthly effects, Model 3 explains a portion of previously unexplained variability and highlights the importance of seasonality in egg production.
+
+```{r}
+model3_data$residuals <- resid(egg_mod3)
+
+ggplot(model3_data, aes(x = fitted, y = residuals)) +
+  geom_point(color = "#008080", alpha = 0.25) +
+  geom_hline(yintercept = 0, color = "navy", linewidth = 1) +
+  labs(
+    title = "Residuals vs Fitted Values (Model 3)",
+    x = "Fitted Values",
+    y = "Residuals",
+    caption = "Figure 12"
+  ) +
+  theme_minimal()
+```
+The residuals vs fitted plot for Model 3 shows that residuals are centered around zero with no strong evidence of nonlinearity. This indicates that the inclusion of month effectively captures seasonal variation in egg production. The vertical banding pattern reflects the categorical nature of the month variable. However, heteroskedasticity remains evident, as the spread of residuals increases with fitted values.
 
 ```{r, warning=FALSE, echo=TRUE}
 eggData_clean %>%
@@ -601,7 +685,7 @@ eggData_clean %>%
     title = "Average Egg Production Per Month (Model 3)",
     x = "Month",
     y = "Egg Production per 100 Layers",
-    caption = "Figure 10"
+    caption = "Figure 13"
   ) + 
   theme(
   plot.title = element_text(face = "bold", hjust = 0.5)
@@ -609,8 +693,54 @@ eggData_clean %>%
 ```
 Figure 10 demonstrates a clear seasonal pattern in egg production by month. Production is notably lowest in February, while several peak periods occur in the spring, summer, and late fall months. This pattern helps explain the improved performance of Model 3, as incorporating monthly effects captures important structure that was not accounted for in earlier models. The irregular shape of the seasonal trend further suggests that multiple environmental and biological factors contribute to variation in production.
 
+```{r}
+full_model_data <- model.frame(egg_mod4)
 
-------------------------------------------------------------------------
+full_model_data$observed <- model.response(full_model_data)
+full_model_data$fitted <- fitted(egg_mod4)
+
+ggplot(full_model_data, aes(x = fitted, y = observed)) +
+  geom_point(color = "#008080", alpha = 0.25) +
+  geom_abline(slope = 1, intercept = 0, color = "navy", linewidth = 1) +
+  labs(
+    title = "Observed vs Fitted Values (Combined Model)",
+    x = "Fitted Values",
+    y = "Observed Eggs per 100 Layers",
+    caption = "Figure 14"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+full_model_data$residuals <- resid(egg_mod4)
+
+ggplot(full_model_data, aes(x = fitted, y = residuals)) +
+  geom_point(color = "#008080", alpha = 0.25) +
+  geom_hline(yintercept = 0, color = "navy", linewidth = 1) +
+  labs(
+    title = "Residuals vs Fitted Values (Combined Model)",
+    x = "Fitted Values",
+    y = "Residuals",
+    caption = "Figure 15"
+  ) +
+  theme_minimal()
+```
+The residuals vs fitted plot for the combined model shows a substantial improvement over the previous models. Residuals are centered around zero with no clear evidence of nonlinearity or systematic structure, indicating that the model sufficiently captures the dynamics of egg production. Compared to earlier models, the spread of residuals is more uniform, suggesting that the inclusion of both year and monthly effects, along with temperature and feed price, significantly improves model fit. Although slight heteroskedasticity remains, the issue is considerably reduced.
+
+```{r}
+aic_results <- AIC(egg_mod1, egg_mod2, egg_mod3, egg_mod4) %>%
+  as.data.frame() %>%
+  tibble::rownames_to_column("Model") %>%
+  arrange(AIC)
+aic_results %>%
+  gt() %>%
+  tab_header(
+    title = "Model Comparison Using AIC"
+  )
+```
+Model comparison using Akaike Information Criterion (AIC) strongly favors the combined model (Model 4), which yields the lowest AIC value (86,096.26). The differences in AIC between Model 4 and the remaining models are substantial, exceeding 4,000 in all cases. This indicates that Model 4 provides a significantly better balance of model fit and complexity. This result is consistent with the diagnostic plots, which show improved clustering of observed and fitted values and more uniform residual patterns for the combined model. This output supports the inclusion of temperature, feed price, year, and month simultaneously, as each contributes meaningful explanatory power when modeled together.
+
+---
 
 ```{r, warning=FALSE, echo=TRUE}
 re_state <- ranef(egg_mod1)$state
@@ -623,7 +753,7 @@ ggplot(re_state, aes(x = reorder(state, `(Intercept)`), y = `(Intercept)`)) +
     title = "State-Level Random Intercepts",
     x = "State",
     y = "Deviation from Overall Mean",
-    caption = "Figure 11") + 
+    caption = "Figure 16") + 
   theme(
   plot.title = element_text(face = "bold", hjust = 0.5)
 )
@@ -634,6 +764,8 @@ production. States with positive values exhibit higher baseline
 productivity, while those with negative values fall below the overall
 average. The wide spread of values indicates substantial variability in egg production across states and highlights the importance of including state-level random effects in the model.
 
+---
+
 ### Conclusion
 
 Egg production varies across time, seasons, and regions, making it difficult to identify the primary drivers of productivity. This project analyzes U.S. egg production data using linear mixed-effects models to separate long-term trends, seasonal patterns, and state-level differences. Comparison across models revealed that incorporating seasonal effects substantially improved model performance, indicating that month-to-month variation is a primary driver of egg production. The observed seasonal pattern demonstrates consistent fluctuations throughout the year, with distinct peaks and troughs, highlighting the importance of accounting for cyclical production dynamics.
@@ -642,7 +774,11 @@ Among the fixed effects, feed price exhibited a strong positive association with
 
 In addition to these effects, substantial variability across states was observed, with state-level random intercepts indicating large differences in baseline production levels. These persistent differences suggest that unobserved structural factors, such as management practices, production systems, and regional conditions, play a significant role in shaping productivity outcomes.
 
+This analysis is subject to several limitations. The model assumes linear relationships for all predictors, which may not fully capture nonlinear effects such as temperature stress. Additionally, unobserved factors such as farm management practices and breed differences are not explicitly modeled, though partially accounted for through random effects.
+
 Overall, the results demonstrate that egg production is driven by a combination of strong seasonal patterns, broader economic and environmental influences, and considerable state-level heterogeneity. The progression from simpler to more comprehensive models highlights the importance of properly accounting for seasonality and hierarchical structure in the data. These findings suggest that while national trends provide useful context, effective strategies to improve productivity should account for both seasonal dynamics and region-specific conditions.[^1]
+
+---
 
 # References
 
