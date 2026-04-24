@@ -30,7 +30,7 @@ editor:
   - Repeated monthly observations
   - Nested structure (months within states)
 
-➡️ Linear Mixed Models (LMMs) are appropriate
+→ Linear Mixed Models (LMMs) are appropriate
 
 </div>
 
@@ -90,20 +90,6 @@ $$
 
 </div>
 
-## Model Specification
-
-
-<div style="font-size: 0.8em;">
-
-**Four-Model Approach**
-
-- **Model 1**: Temperature + Feed Price
-- **Model 2**: Long-term trend (Year)
-- **Model 3**: Seasonality (Month)
-- **Model 4**: Combined model
-- All models include: random intercept (State)
-
-</div>
 
 ## Exploratory Findings
 
@@ -225,6 +211,21 @@ scatter2 + geom_point(color = "#008080", alpha = 0.25) +
 
 - Slight positive trend in feed price vs productivity
 
+## Model Specification
+
+
+<div style="font-size: 0.8em;">
+
+**Four-Model Approach**
+
+- **Model 1**: Temperature + Feed Price
+- **Model 2**: Long-term trend (Year)
+- **Model 3**: Seasonality (Month)
+- **Model 4**: Combined model
+- All models include: random intercept (State)
+
+</div>
+
 ## Model 1 Results
 
 ```{r, warning=FALSE, echo=FALSE}
@@ -326,7 +327,8 @@ tbl_regression(
   modify_caption("**Table 3: Linear Mixed Model Results for Month**") %>%
   as_gt() %>%
   gt::tab_options(
-    table.font.size = gt::px(14)
+    table.font.size = gt::px(20),
+    data_row.padding = gt::px(4)   
   )
 ```
 
@@ -676,20 +678,24 @@ ggplot(re_state, aes(x = reorder(state, `(Intercept)`), y = `(Intercept)`)) +
   - Long-term industry improvements
   - State-level differences
   
-→ Best model must account for all three
+- Simpler models can produce misleading conclusions
+
+- The combined model provides the most reliable and complete representation
+
+- Accounting for hierarchical structure is essential in real-world data
 
 
 </div>
 
 **→ Mixed models provide a powerful framework for capturing these dynamics.**
 
-## Takeaways
+## Thank You
 
-<div style="font-size: 0.8em;">
+<div style="display: flex; justify-content: left; align-items: center; height: 20vh;">
 
-- Ignoring seasonality → poor model fit
-- Ignoring time → misleading relationships
-- Combined modeling → strongest results
+Questions?
 
 </div>
+
+
 
