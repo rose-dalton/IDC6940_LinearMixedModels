@@ -696,6 +696,6 @@ ggplot(re_state, aes(x = reorder(state, `(Intercept)`), y = `(Intercept)`)) +
 Questions?
 
 </div>
-
+ 
 
 
